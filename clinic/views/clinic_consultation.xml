@@ -1,0 +1,19 @@
+<odoo>
+    <record id="clinic_consultation_action" model="ir.actions.act_window">
+        <field name="name">Consultation</field>
+        <field name="res_model">clinic.consultation</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="clinic_consultation_list_view" model="ir.ui.view">
+        <field name="name">consultation.list</field>
+        <field name="model">clinic.consultation</field>
+        <field name="arch" type="xml">
+            <list string="Channel">
+                <field name="patient_name"/>
+                <field name="gender"/>
+                <field name="doctor_name"/>
+            </list>
+        </field>
+    </record>
+</odoo>

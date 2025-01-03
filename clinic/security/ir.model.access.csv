@@ -1,0 +1,4 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+access_op_ticket,access.op.ticket,model_op_ticket,base.group_user,1,1,1,1
+access_clinic_consultation,access.clinic.consultation,model_clinic_consultation,base.group_user,1,1,1,1
+access_clinic_prescription,access.clinic.prescription,model_clinic_prescription,base.group_user,1,1,1,1

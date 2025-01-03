@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <menuitem id="root_menu" name="Hostel"/>
+    <menuitem id="hostel_room_menu" action="hostel_room_action"
+              parent="root_menu"/>
+    <menuitem id="hostel_student_menu" action="hostel_student_action"
+              parent="root_menu"/>
+    <menuitem id="hostel_facilities_menu" action="hostel_facilities_action"
+              parent="root_menu"/>
+</odoo>

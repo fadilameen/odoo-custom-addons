@@ -1,0 +1,62 @@
+<odoo>
+    <record id="op_ticket_action" model="ir.actions.act_window">
+        <field name="name">OP Registration</field>
+        <field name="res_model">op.ticket</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="op_ticket_list_view" model="ir.ui.view">
+        <field name="name">op.ticket.list</field>
+        <field name="model">op.ticket</field>
+        <field name="arch" type="xml">
+            <list string="Channel">
+                <field name="patient_name"/>
+                <field name="gender"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="op_ticket_form_view" model="ir.ui.view">
+        <field name="name">op.ticket.form</field>
+        <field name="model">op.ticket</field>
+        <field name="arch" type="xml">
+            <form string="OP Ticket Form ">
+                <sheet>
+                    <group>
+                        <field name="reference"/>
+                    </group>
+                    <group>
+                        <field name="serial_no"/>
+                    </group>
+                    <group>
+                        <field name="currency_id"/>
+                    </group>
+                    <group>
+                        <field name="date_and_time"/>
+                    </group>
+                    <group>
+                        <field name="patient_name"/>
+                    </group>
+                    <group>
+                        <field name="age"/>
+                    </group>
+                    <group>
+                        <field name="gender"/>
+                    </group>
+                    <group>
+                        <field name="doctor_name"/>
+                    </group>
+
+                    <group>
+                        <field name="fee"/>
+                    </group>
+                    <group>
+                        <field name="token_no"/>
+                    </group>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

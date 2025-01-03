@@ -1,0 +1,7 @@
+<odoo>
+    <menuitem id="clinic_menu_root" name="clinic"/>
+    <menuitem id="clinic_menu" name="Registration" action="registration_action" sequence="1" parent="clinic_menu_root"/>
+    <menuitem id="op_ticket_menu" name="OP Registration" action="op_ticket_action" parent="clinic_menu_root"/>
+    <menuitem id="clinic_consultation_menu" name="Consultation" action="clinic_consultation_action"
+              parent="clinic_menu_root"/>
+</odoo>
