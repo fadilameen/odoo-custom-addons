@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 
 
-from odoo import fields
-from odoo import models
+from odoo import fields, models
 
 
 class HostelFacilities(models.Model):
     """Defining hostel facilities"""
     _name = "hostel.facilities"
     _description = "Facilities"
+    _rec_name = "name"
 
     name = fields.Char(required=True)
     charge = fields.Monetary(string="Charge")
