@@ -12,9 +12,10 @@ The easy to use hostel management system which allows to add students and alloca
 """,
     'category': 'Human Resources/Hostel',
     'website': '',
-    'depends': ['base', 'mail', ],
+    'depends': ['base', 'mail', 'product'],
     'data': [
         'data/hostel_sequence_data.xml',
+        'data/hostel_rent_product_data.xml',
         'security/ir.model.access.csv',
         'views/hostel_room_views.xml',
         'views/hostel_student_views.xml',

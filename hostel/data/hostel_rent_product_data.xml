@@ -1,0 +1,16 @@
+<odoo>
+    <record id="hostel_rent_product" model="product.template">
+        <field name="name">Hostel Rent</field>
+        <field name="categ_id" ref="product.product_category_3"/>
+        <field name="standard_price">0</field>
+        <field name="list_price">0</field>
+        <field name="type">service</field>
+    </record>
+    <!--    <record id="hostel_rent_product" model="">-->
+    <!--        <field name="name">Hostel Rent</field>-->
+    <!--        <field name="standard_price">20.5</field>-->
+    <!--        <field name="list_price">30.75</field>-->
+    <!--        &lt;!&ndash;        <field name="rental_ok" eval="True"/>&ndash;&gt;-->
+    <!--        <field name="type">service</field>-->
+    <!--    </record>-->
+</odoo>

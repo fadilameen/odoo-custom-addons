@@ -29,7 +29,7 @@ class HostelRoom(models.Model):
             record.bed_count_string = str(
                 record.bed_count) if record.bed_count else "0"
 
-    rent = fields.Monetary(tracking=True)
+    rent = fields.Monetary(tracking=True, default=100)
     company_id = fields.Many2one('res.company', copy=False,
                                  string="Company",
                                  default=lambda
@@ -47,6 +47,23 @@ class HostelRoom(models.Model):
     person_count = fields.Integer(compute='_compute_person_count', )
 
     facility_id = fields.Many2many("hostel.facility", string="Facilities")
+    total_rent = fields.Monetary(compute="_compute_total_rent")
+
+    @api.depends('rent', 'facility_id')
+    def _compute_total_rent(self):
+        """for calculating total rent"""
+        for record in self:
+            facilities_total = 0
+            for facility in record.facility_id:
+                facilities_total += facility.charge
+            record.total_rent = record.rent + facilities_total
+
+    @api.depends('bed_count')
+    def _compute_bed_count_string(self):
+        """for converting the bed count into string"""
+        for record in self:
+            record.bed_count_string = str(
+                record.bed_count) if record.bed_count else "0"
 
     @api.depends("student_ids")
     def _compute_person_count(self):
