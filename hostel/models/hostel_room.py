@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import _
-from odoo import api
-from odoo import fields
-from odoo import models
+from odoo import api, fields, models, _
 
 
 class HostelRoom(models.Model):
@@ -22,9 +19,18 @@ class HostelRoom(models.Model):
     room_type = fields.Selection(selection=[('ac', 'AC'),
                                             ('non_ac', 'Non AC')],
                                  tracking=True, default='non_ac', required=True)
-    number_of_beds = fields.Integer(required=True, tracking=True)
+    bed_count = fields.Integer(required=True, tracking=True)
+    bed_count_string = fields.Char(compute="_compute_bed_count_string",
+                                   store=True)
+
+    @api.depends('bed_count')
+    def _compute_bed_count_string(self):
+        for record in self:
+            record.bed_count_string = str(
+                record.bed_count) if record.bed_count else "0"
+
     rent = fields.Monetary(tracking=True)
-    company_id = fields.Many2one('res.company', store=True, copy=False,
+    company_id = fields.Many2one('res.company', copy=False,
                                  string="Company",
                                  default=lambda
                                      self: self.env.user.company_id.id)
@@ -37,8 +43,10 @@ class HostelRoom(models.Model):
                                         ('full', 'Full')],
                              compute='_compute_current_state', store=True)
     student_ids = fields.One2many("hostel.student",
-                                  "room_no")
+                                  "room_id")
     person_count = fields.Integer(compute='_compute_person_count', )
+
+    facility_id = fields.Many2many("hostel.facility", string="Facilities")
 
     @api.depends("student_ids")
     def _compute_person_count(self):
@@ -52,25 +60,37 @@ class HostelRoom(models.Model):
             # else:
             #     record.person_count = 0
 
-    @api.depends('person_count', 'number_of_beds', "student_ids")
+    @api.depends('person_count', 'bed_count', "student_ids")
     def _compute_current_state(self):
         """for changing the state of room according to count of students per room"""
         for record in self:
-            if record.student_ids:
-                if record.person_count:
-                    if record.person_count > 0:
-                        record.write({'state': 'partial'})
-                    if record.person_count >= record.number_of_beds:
-                        record.write({'state': 'full'})
-                        # state = 'full'
-            # elif record.person_count == 0:
-            #     record.write({'state': 'empty'})
-            else:
-                if record.number_of_beds != 0:
-                    record.write({'state': 'empty'})
-                    print("else working")
-                else:
+            if record.bed_count == 0:
+                record.write({'state': 'full'})
+            elif record.person_count:
+                if record.person_count >= record.bed_count:
                     record.write({'state': 'full'})
+                else:
+                    record.write({'state': 'partial'})
+            else:
+                record.write({'state': 'empty'})
+                print("else working")
+
+        # for record in self:
+        #     if record.student_ids:
+        #         if record.person_count:
+        #             if record.person_count > 0:
+        #                 record.write({'state': 'partial'})
+        #             if record.person_count >= record.bed_count:
+        #                 record.write({'state': 'full'})
+        #                 # state = 'full'
+        #     # elif record.person_count == 0:
+        #     #     record.write({'state': 'empty'})
+        #     else:
+        #         if record.bed_count != 0:
+        #             record.write({'state': 'empty'})
+        #             print("else working")
+        #         else:
+        #             record.write({'state': 'full'})
 
     @api.model_create_multi
     def create(self, vals):

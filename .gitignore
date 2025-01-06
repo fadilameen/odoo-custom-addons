@@ -1,0 +1,14 @@
+
+# Ignore all files in the logs directory
+logs/
+
+# Ignore Python cache files
+__pycache__/
+hostel/__pycache__/
+
+
+*.pyc
+
+# Ignore all `.env` files
+*.env
+

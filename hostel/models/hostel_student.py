@@ -2,10 +2,8 @@
 
 from dateutil.utils import today
 
-from odoo import _
-from odoo import api
-from odoo import fields
-from odoo import models
+from odoo import api, fields, models, _
+from odoo.api import readonly
 from odoo.exceptions import ValidationError
 
 
@@ -14,33 +12,35 @@ class HostelStudent(models.Model):
 
     _name = "hostel.student"
     _description = "Hostel Student"
+    # _rec_name = "name"
 
-    name = fields.Many2one("res.partner", required=True,
-                           string="Student Name")
+    name = fields.Char(string="Student Name")
+    partner_id = fields.Many2one("res.partner", readonly=True)
     student_id = fields.Char(string="Student ID",
                              default=lambda self: _('New'), readonly=True)
     date_of_birth = fields.Datetime(default=False)
-    age = fields.Integer(string="Age", compute="_compute_calculate_age")
-    room_no = fields.Many2one("hostel.room", readonly=True)
-    email = fields.Char(related="name.email")
+    age = fields.Integer(string="Age")
+    room_id = fields.Many2one("hostel.room", readonly=True)
+    email = fields.Char(string="Email")
     image = fields.Image(string="Image")
     receive_mail = fields.Boolean(default=False)
-    street = fields.Char(related="name.street")
-    street2 = fields.Char(related="name.street2")
-    city = fields.Char(related="name.city")
-    state_id = fields.Many2one(related="name.state_id")
-    zip = fields.Char(related="name.zip")
-    country_id = fields.Many2one(related="name.country_id")
+    street = fields.Char(string="Street")
+    street2 = fields.Char(string="Street2")
+    city = fields.Char(string="City")
+    state_id = fields.Many2one("res.country.state", string="State",
+                               domain="[('country_id', '=?', country_id)]")
+    zip = fields.Char(string="Zip")
+    country_id = fields.Many2one("res.country", string="Country")
     company_id = fields.Many2one('res.company', store=True, copy=False,
                                  string="Company",
                                  default=lambda
                                      self: self.env.user.company_id.id)
 
-    @api.constrains('room_no')
-    def _constrains_check_room(self):
+    @api.constrains('room_id')
+    def _check_room_id(self):
         """restricting student allocation to room which is already full"""
         for record in self:
-            if record.room_no.person_count > record.room_no.number_of_beds:
+            if record.room_id.person_count > record.room_id.bed_count:
                 raise ValidationError("No vacant rooms left")
 
     _sql_constraints = [
@@ -49,28 +49,42 @@ class HostelStudent(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        """for generating sequence number for student"""
+        """for generating sequence number for student and create partner when creating student"""
 
         for val in vals_list:
             val['student_id'] = self.env["ir.sequence"].next_by_code(
                 "student_sequence_code")
+
+            partner = self.env['res.partner'].create([{
+                'name': val.get('name'),
+                'email': val.get('email'),
+                'street': val.get('street'),
+                'street2': val.get('street2'),
+                'city': val.get('city'),
+                'state_id': val.get('state_id'),
+                'zip': val.get('zip'),
+                'country_id': val.get('country_id')
+            }])
+
+            val['partner_id'] = partner.id
+
             return super(HostelStudent, self).create(vals_list)
 
     def action_alot_room(self):
+        """for allotting the student into available rooms"""
         room_list = self.env['hostel.room'].search(
             [('state', '!=', 'full')], limit=1)
         print(room_list.id)
         if room_list.id:
-            self.room_no = room_list.id
+            self.room_id = room_list.id
         else:
             raise ValidationError("No vacant rooms left")
 
-    @api.depends('date_of_birth')
-    def _compute_calculate_age(self):
+    @api.onchange('date_of_birth')
+    def _onchange_date_of_birth(self):
         """for calculating age"""
         for record in self:
             if record.date_of_birth:
-                record.age = (today() - record.date_of_birth
-                              ).days / 365
+                record.age = (today() - record.date_of_birth).days / 365
             else:
                 record.age = False

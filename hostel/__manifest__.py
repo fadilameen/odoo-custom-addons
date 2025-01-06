@@ -18,12 +18,13 @@ The easy to use hostel management system which allows to add students and alloca
         'security/ir.model.access.csv',
         'views/hostel_room_views.xml',
         'views/hostel_student_views.xml',
-        'views/hostel_facilities_views.xml',
+        'views/hostel_facility_views.xml',
+        'views/leave_request.xml',
         'views/hostel_menu.xml',
 
     ],
     'demo': [
-        'data/hostel_facilities_data.xml'],
+        'data/hostel_facility_data.xml'],
     'installable': True,
     'application': "True",
     'author': 'Fadil',

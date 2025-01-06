@@ -10,7 +10,7 @@
                 <field name="room_number"/>
                 <field name="room_type"/>
                 <field name="state"/>
-                <field name="number_of_beds"/>
+                <field name="bed_count"/>
                 <field name="person_count"/>
                 <field name="rent"/>
                 <field name="id"/>
@@ -32,23 +32,49 @@
                             <!--                            <field name="rname"/>-->
                             <field name="room_number"/>
                             <field name="room_type"/>
-                            <field name="number_of_beds"/>
+                            <field name="bed_count"/>
                         </group>
                         <group>
                             <field name="company_id"/>
                             <field name="currency_id"/>
+                            <field name="facility_id" widget="many2many_tags"
+                            />
+
                             <field name="rent"/>
                             <field name="person_count"/>
                         </group>
                     </group>
+                    <notebook>
+                        <page string="Students">
+                            <field name="student_ids"/>
+                        </page>
+                    </notebook>
                 </sheet>
                 <chatter/>
             </form>
         </field>
     </record>
+    <record id="hostel_room_search" model="ir.ui.view">
+        <field name="name">hostel.room.search</field>
+        <field name="model">hostel.room</field>
+        <field name="arch" type="xml">
+            <search string="test">
+                <field name="room_number"/>
+                <separator/>
+                <filter string="Available" name="state"
+                        domain="[('state', '!=', 'full')]"/>
+                <group string="Group By">
+                    <filter string="Bed Count" name="group_by_bed_count"
+                            context="{'group_by': 'bed_count_string'}"/>
+                </group>
+            </search>
+        </field>
+
+    </record>
     <record id="hostel_room_action" model="ir.actions.act_window">
         <field name="name">Rooms</field>
         <field name="res_model">hostel.room</field>
         <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_state':1}</field>
     </record>
 </odoo>

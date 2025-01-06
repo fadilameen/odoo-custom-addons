@@ -6,8 +6,8 @@ from odoo import fields, models
 
 class HostelFacilities(models.Model):
     """Defining hostel facilities"""
-    _name = "hostel.facilities"
-    _description = "Facilities"
+    _name = "hostel.facility"
+    _description = "Facility"
     _rec_name = "name"
 
     name = fields.Char(required=True)
