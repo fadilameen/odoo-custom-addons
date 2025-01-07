@@ -9,7 +9,7 @@ class LeaveRequest(models.Model):
     _description = "Leave Request"
     _rec_name = "student_name"
 
-    student_name = fields.Many2one("hostel.student")
+    student_name = fields.Many2one("hostel.student", ondelete='cascade')
     leave_date = fields.Date(string="Leave Date")
     arrival_date = fields.Date(string="Arrival Date")
     status = fields.Selection(

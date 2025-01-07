@@ -24,6 +24,10 @@
         <field name="arch" type="xml">
             <form string="Channel">
                 <header>
+                    <button name="action_monthly_invoice"
+                            string="Monthly Invoice"
+                            type="object"
+                            class="oe_highlight"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>

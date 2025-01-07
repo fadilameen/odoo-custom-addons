@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from email.policy import default
+from itertools import count
 
 from dateutil.utils import today
 
@@ -35,6 +37,17 @@ class HostelStudent(models.Model):
                                  string="Company",
                                  default=lambda
                                      self: self.env.user.company_id.id)
+    invoice_count = fields.Integer(string="Invoices", default=0,
+                                   compute='_compute_invoice_count')
+    invoice_ids = fields.One2many("account.move", "student_id")
+
+    # leave_request_ids = fields.One2many("leave.request", "student_name",
+    #                                     ondelete='cascade')
+
+    @api.depends("invoice_ids")
+    def _compute_invoice_count(self):
+        for record in self:
+            record.invoice_count = len(record.invoice_ids)
 
     @api.constrains('room_id')
     def _check_room_id(self):
@@ -80,6 +93,10 @@ class HostelStudent(models.Model):
         else:
             raise ValidationError("No vacant rooms left")
 
+    def action_vacate_room(self):
+        """for removing the student from  rooms"""
+        self.room_id = ''
+
     @api.onchange('date_of_birth')
     def _onchange_date_of_birth(self):
         """for calculating age"""
@@ -88,3 +105,13 @@ class HostelStudent(models.Model):
                 record.age = (today() - record.date_of_birth).days / 365
             else:
                 record.age = False
+
+    def action_get_invoice(self):
+        print(self.name)
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Invoices",
+            "res_model": "account.move",
+            'domain': [('student_id', '=', self.name)],
+            "view_mode": "list,form",
+        }

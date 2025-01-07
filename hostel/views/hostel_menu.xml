@@ -10,4 +10,6 @@
               parent="root_menu"/>
     <menuitem id="leave_request_menu" action="leave_request_action"
               parent="root_menu"/>
+    <menuitem id="hostel_invoice_menu" action="hostel_invoice_action"
+              parent="root_menu"/>
 </odoo>

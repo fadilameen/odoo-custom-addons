@@ -116,3 +116,30 @@ class HostelRoom(models.Model):
             val['room_number'] = self.env["ir.sequence"].next_by_code(
                 'room_sequence_code')
         return super(HostelRoom, self).create(vals)
+
+    def action_monthly_invoice(self):
+        for record in self.student_ids:
+            invoice_vals = {
+                'move_type': 'out_invoice',
+                'partner_id': record.partner_id.id,
+                'student_id': record.id,
+                # 'default_state': 'posted',
+
+                # 'amount_total': self.total_rent,
+                'invoice_line_ids': [
+                    (0, None, {
+                        'product_id': self.env.ref(
+                            "hostel.hostel_rent_product").id,
+                        'name': 'Hostel Rent',
+                        'quantity': 1,
+                        'price_unit': self.total_rent,
+                        # 'price_subtotal': self.total_rent,
+                    }),
+                ],
+            }
+            inv = self.env['account.move'].create([invoice_vals])
+            inv.action_post()
+            template = self.env.ref(
+                'account.email_template_edi_invoice')
+            print(inv.id)
+            template.send_mail(inv.id, force_send=True)

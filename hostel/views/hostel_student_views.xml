@@ -18,15 +18,28 @@
         <field name="name">hostel.student.form.view</field>
         <field name="model">hostel.student</field>
         <field name="arch" type="xml">
+
             <form string="test">
+
                 <header>
 
                     <button name="action_alot_room" string="Alot Room"
                             type="object"
                             class="oe_highlight"/>
+                    <button name="action_vacate_room" string="Vacate Room"
+                            type="object"
+                    />
 
                 </header>
                 <sheet>
+                    <div name="button_box" position-="inside">
+                        <button class="oe_stat_button"
+                                type="object"
+                                icon="fa-pencil-square-o"
+                                name="action_get_invoice">
+                            <field name="invoice_count" widget="statinfo"/>
+                        </button>
+                    </div>
 
                     <field name="image" widget="image" class="oe_avatar"/>
                     <group>

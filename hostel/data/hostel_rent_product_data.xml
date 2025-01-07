@@ -1,5 +1,5 @@
 <odoo>
-    <record id="hostel_rent_product" model="product.template">
+    <record id="hostel_rent_product" model="product.product">
         <field name="name">Hostel Rent</field>
         <field name="categ_id" ref="product.product_category_3"/>
         <field name="standard_price">0</field>
