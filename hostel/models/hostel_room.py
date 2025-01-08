@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
+from dateutil.utils import today
 
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
+from odoo.tools import date_utils
 
 
 class HostelRoom(models.Model):
@@ -22,12 +25,6 @@ class HostelRoom(models.Model):
     bed_count = fields.Integer(required=True, tracking=True)
     bed_count_string = fields.Char(compute="_compute_bed_count_string",
                                    store=True)
-
-    @api.depends('bed_count')
-    def _compute_bed_count_string(self):
-        for record in self:
-            record.bed_count_string = str(
-                record.bed_count) if record.bed_count else "0"
 
     rent = fields.Monetary(tracking=True, default=100)
     company_id = fields.Many2one('res.company', copy=False,
@@ -90,7 +87,6 @@ class HostelRoom(models.Model):
                     record.write({'state': 'partial'})
             else:
                 record.write({'state': 'empty'})
-                print("else working")
 
         # for record in self:
         #     if record.student_ids:
@@ -118,28 +114,39 @@ class HostelRoom(models.Model):
         return super(HostelRoom, self).create(vals)
 
     def action_monthly_invoice(self):
-        for record in self.student_ids:
-            invoice_vals = {
-                'move_type': 'out_invoice',
-                'partner_id': record.partner_id.id,
-                'student_id': record.id,
-                # 'default_state': 'posted',
+        if self.student_ids:
 
-                # 'amount_total': self.total_rent,
-                'invoice_line_ids': [
-                    (0, None, {
-                        'product_id': self.env.ref(
-                            "hostel.hostel_rent_product").id,
-                        'name': 'Hostel Rent',
-                        'quantity': 1,
-                        'price_unit': self.total_rent,
-                        # 'price_subtotal': self.total_rent,
-                    }),
-                ],
-            }
-            inv = self.env['account.move'].create([invoice_vals])
-            inv.action_post()
-            template = self.env.ref(
-                'account.email_template_edi_invoice')
-            print(inv.id)
-            template.send_mail(inv.id, force_send=True)
+            for record in self.student_ids:
+                before_30_days = date_utils.subtract(today(), months=1)
+                existing_invoice = self.env['account.move'].search(
+                    [("partner_id", "=", record.partner_id.id), ("invoice_date", ">", before_30_days),
+                     ("state", "!=", "cancel")], limit=1)
+                if existing_invoice:
+                    raise ValidationError("Invoice already generated this month")
+
+                else:
+                    invoice_vals = {
+                        'move_type': 'out_invoice',
+                        'partner_id': record.partner_id.id,
+                        'student_id': record.id,
+                        # 'default_state': 'posted',
+                        # 'amount_total': self.total_rent,
+                        'invoice_line_ids': [
+                            (0, None, {
+                                'product_id': self.env.ref(
+                                    "hostel.hostel_rent_product").id,
+                                'name': 'Hostel Rent',
+                                'quantity': 1,
+                                'price_unit': self.total_rent,
+                                # 'price_subtotal': self.total_rent,
+                            }),
+                        ],
+                    }
+                    inv = self.env['account.move'].create([invoice_vals])
+                    inv.action_post()
+                    template = self.env.ref(
+                        'account.email_template_edi_invoice')
+                    template.send_mail(inv.id, force_send=True)
+
+        else:
+            raise ValidationError("There are no students to invoice")
