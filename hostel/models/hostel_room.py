@@ -119,10 +119,12 @@ class HostelRoom(models.Model):
             for record in self.student_ids:
                 before_30_days = date_utils.subtract(today(), months=1)
                 existing_invoice = self.env['account.move'].search(
-                    [("partner_id", "=", record.partner_id.id), ("invoice_date", ">", before_30_days),
+                    [("partner_id", "=", record.partner_id.id),
+                     ("invoice_date", ">", before_30_days),
                      ("state", "!=", "cancel")], limit=1)
                 if existing_invoice:
-                    raise ValidationError("Invoice already generated this month")
+                    raise ValidationError(
+                        "Invoice already generated this month")
 
                 else:
                     invoice_vals = {
@@ -144,9 +146,10 @@ class HostelRoom(models.Model):
                     }
                     inv = self.env['account.move'].create([invoice_vals])
                     inv.action_post()
-                    template = self.env.ref(
-                        'account.email_template_edi_invoice')
-                    template.send_mail(inv.id, force_send=True)
+                    if record.receive_mail:
+                        template = self.env.ref(
+                            'account.email_template_edi_invoice')
+                        template.send_mail(inv.id, force_send=True)
 
         else:
             raise ValidationError("There are no students to invoice")

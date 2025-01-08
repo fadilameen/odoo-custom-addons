@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from odoo import fields, api
 from odoo import models
 from odoo.api import ValuesType, Self

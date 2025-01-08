@@ -25,7 +25,7 @@ class HostelStudent(models.Model):
     room_id = fields.Many2one("hostel.room", readonly=True)
     email = fields.Char(string="Email")
     image = fields.Image(string="Image")
-    receive_mail = fields.Boolean(default=False)
+    receive_mail = fields.Boolean(default=False, )
     street = fields.Char(string="Street")
     street2 = fields.Char(string="Street2")
     city = fields.Char(string="City")
