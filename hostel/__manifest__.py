@@ -16,12 +16,14 @@ The easy to use hostel management system which allows to add students and alloca
     'data': [
         'data/hostel_sequence_data.xml',
         'data/hostel_rent_product_data.xml',
+        'data/ir_cron_data.xml',
         'security/ir.model.access.csv',
         'views/hostel_room_views.xml',
         'views/hostel_student_views.xml',
         'views/hostel_facility_views.xml',
         'views/leave_request.xml',
         'views/hostel_invoice_views.xml',
+        'views/cleaning_service_views.xml',
         'views/hostel_menu.xml',
 
     ],

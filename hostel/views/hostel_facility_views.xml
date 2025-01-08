@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
+    <record id="hostel_facility_list_view" model="ir.ui.view">
+        <field name="name">facility.list</field>
+        <field name="model">hostel.facility</field>
+        <field name="arch" type="xml">
+            <list string="test">
+                <field name="name"/>
+                <field name="charge"/>
+            </list>
+        </field>
+    </record>
     <record id="hostel_facility_action" model="ir.actions.act_window">
         <field name="name">Facilities</field>
         <field name="res_model">hostel.facility</field>

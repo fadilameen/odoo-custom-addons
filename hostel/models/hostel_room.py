@@ -37,7 +37,8 @@ class HostelRoom(models.Model):
                                   )
     state = fields.Selection(selection=[('empty', 'Empty'),
                                         ('partial', 'Partial'),
-                                        ('full', 'Full')],
+                                        ('full', 'Full'),
+                                        ('cleaning', 'Cleaning')],
                              compute='_compute_current_state', store=True)
     student_ids = fields.One2many("hostel.student",
                                   "room_id")
@@ -153,3 +154,7 @@ class HostelRoom(models.Model):
 
         else:
             raise ValidationError("There are no students to invoice")
+
+    def action_monthly_automatic_invoice(self):
+        rooms_with_students = self.search([("student_ids", '!=', "False")])
+        print(rooms_with_students)

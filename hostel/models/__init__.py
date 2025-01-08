@@ -5,4 +5,4 @@ from . import hostel_student
 from . import hostel_facility
 from . import hostel_invoice
 from . import leave_request
-# from . import hostel_rent_product
+from . import cleaning_service

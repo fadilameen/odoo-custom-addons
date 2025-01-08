@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <odoo>
+    <record id="hostel_student_search" model="ir.ui.view">
+        <field name="model">hostel.student</field>
+        <field name="arch" type="xml">
+            <search string="hostel_search">
+                <filter string="Archived" name="inactive"
+                        domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
 
     <record id="hostel_student_list_view" model="ir.ui.view">
         <field name="name">hostel.student.list</field>

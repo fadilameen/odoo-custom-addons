@@ -43,6 +43,7 @@ class HostelStudent(models.Model):
 
     # leave_request_ids = fields.One2many("leave.request", "student_name",
     #                                     ondelete='cascade')
+    active = fields.Boolean(default=True)
 
     @api.depends("invoice_ids")
     def _compute_invoice_count(self):
@@ -95,7 +96,16 @@ class HostelStudent(models.Model):
 
     def action_vacate_room(self):
         """for removing the student from  rooms"""
+        # print(len(self.room_id.student_ids))
+        room_temp = self.room_id
         self.room_id = ''
+        print(room_temp.state, "x1")
+        if len(self.room_id.student_ids) == 0:
+            room_temp.state = 'cleaning'
+            print(room_temp.state, "x2")
+            self.env["cleaning.service"].create(
+                [{'room_id': room_temp.id, }])
+        self.active = False
 
     @api.onchange('date_of_birth')
     def _onchange_date_of_birth(self):

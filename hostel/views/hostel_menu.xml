@@ -12,4 +12,6 @@
               parent="root_menu"/>
     <menuitem id="hostel_invoice_menu" action="hostel_invoice_action"
               parent="root_menu"/>
+    <menuitem id="cleaning_service_menu" action="cleaning_service_action"
+              parent="root_menu"/>
 </odoo>

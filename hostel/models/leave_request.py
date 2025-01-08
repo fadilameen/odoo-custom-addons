@@ -18,3 +18,8 @@ class LeaveRequest(models.Model):
     def action_approve(self):
         """to approve the leave request"""
         self.status = 'approved'
+        # print(len(self.student_name.room_id.student_ids))
+        if len(self.student_name.room_id.student_ids) == 1:
+            self.student_name.room_id.state = 'cleaning'
+            self.env["cleaning.service"].create(
+                [{'room_id': self.student_name.room_id.id, }])
