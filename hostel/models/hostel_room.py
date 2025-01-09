@@ -47,6 +47,7 @@ class HostelRoom(models.Model):
     facility_id = fields.Many2many("hostel.facility", string="Facilities")
     total_rent = fields.Monetary(compute="_compute_total_rent")
     pending_amount = fields.Monetary(compute="_compute_pending_amount")
+    cleaning_ids = fields.One2many('cleaning.service', "room_id")
 
     @api.depends('rent', 'facility_id')
     def _compute_total_rent(self):
@@ -76,9 +77,10 @@ class HostelRoom(models.Model):
             # else:
             #     record.person_count = 0
 
-    @api.depends('person_count', 'bed_count', "student_ids")
+    @api.depends('person_count', 'bed_count', "student_ids", "cleaning_ids")
     def compute_current_state(self):
         """for changing the state of room according to count of students per room"""
+        cln = self.cleaning_ids.filtered(lambda cln: cln.state != "done")
         for record in self:
             if record.bed_count == 0:
                 record.write({'state': 'full'})
@@ -89,23 +91,8 @@ class HostelRoom(models.Model):
                     record.write({'state': 'partial'})
             else:
                 record.write({'state': 'empty'})
-
-        # for record in self:
-        #     if record.student_ids:
-        #         if record.person_count:
-        #             if record.person_count > 0:
-        #                 record.write({'state': 'partial'})
-        #             if record.person_count >= record.bed_count:
-        #                 record.write({'state': 'full'})
-        #                 # state = 'full'
-        #     # elif record.person_count == 0:
-        #     #     record.write({'state': 'empty'})
-        #     else:
-        #         if record.bed_count != 0:
-        #             record.write({'state': 'empty'})
-        #             print("else working")
-        #         else:
-        #             record.write({'state': 'full'})
+        if cln:
+            self.state = 'cleaning'
 
     @api.model_create_multi
     def create(self, vals):
@@ -127,7 +114,6 @@ class HostelRoom(models.Model):
                 if existing_invoice:
                     raise ValidationError(
                         "Invoice already generated this month")
-
                 else:
                     invoice_vals = {
                         'move_type': 'out_invoice',

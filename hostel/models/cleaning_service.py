@@ -1,6 +1,7 @@
 from email.policy import default
 
-from odoo import fields, models
+from odoo import fields, models, api
+from odoo.api import ondelete
 
 
 class CleaningService(models.Model):
@@ -8,7 +9,7 @@ class CleaningService(models.Model):
     _description = "Cleaning Service"
     _rec_name = "room_id"
 
-    room_id = fields.Many2one("hostel.room", required=True)
+    room_id = fields.Many2one("hostel.room", required=True, ondelete='cascade')
     start_time = fields.Datetime(string="Start Time")
     cleaning_staff = fields.Many2one("res.users")
     state = fields.Selection(

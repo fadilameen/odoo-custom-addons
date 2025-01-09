@@ -28,8 +28,8 @@
                             string="Monthly Invoice"
                             type="object"
                             class="oe_highlight"/>
-                    <!--                    <button name="compute_pending_amount" string="test"-->
-                    <!--                            type="object"/>-->
+                    <button name="compute_current_state" string="test"
+                            type="object"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
