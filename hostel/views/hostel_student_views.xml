@@ -28,17 +28,13 @@
         <field name="name">hostel.student.form.view</field>
         <field name="model">hostel.student</field>
         <field name="arch" type="xml">
-
             <form string="test">
-
                 <header>
-
                     <button name="action_alot_room" string="Alot Room"
                             type="object"
                             class="oe_highlight"/>
                     <button name="action_vacate_room" string="Vacate Room"
-                            type="object"
-                    />
+                            type="object"/>
 
                 </header>
                 <sheet>
@@ -50,22 +46,30 @@
                             <field name="invoice_count" widget="statinfo"/>
                         </button>
                     </div>
-
                     <field name="image" widget="image" class="oe_avatar"/>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
                     <group>
-                        <h1>
-                            <field name="name"/>
-                        </h1>
 
-                        <field name="student_id"/>
-                        <field name="email"/>
-                        <field name="date_of_birth"/>
-                        <field name="age"/>
-                        <field name="room_id"/>
-                        <field name="receive_mail"/>
-                        <field name="company_id"/>
-                        <field name="partner_id"/>
+                        <group>
+                            <field name="student_id"/>
+                            <field name="room_id"/>
+                            <field name="email"/>
+                            <field name="receive_mail"/>
+                            <field name="date_of_birth"/>
+                            <field name="age"/>
 
+
+                        </group>
+                        <group>
+                            <field name="monthly_amount"/>
+                            <field name="invoice_status"/>
+                            <field name="partner_id"/>
+                            <field name="user_id"/>
+
+                            <field name="company_id"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Address">

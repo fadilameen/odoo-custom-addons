@@ -26,3 +26,4 @@ class CleaningService(models.Model):
 
     def action_complete(self):
         self.state = "done"
+        self.room_id.compute_current_state()

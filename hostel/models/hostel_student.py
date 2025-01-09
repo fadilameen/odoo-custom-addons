@@ -17,13 +17,14 @@ class HostelStudent(models.Model):
     # _rec_name = "name"
 
     name = fields.Char(string="Student Name")
-    partner_id = fields.Many2one("res.partner", readonly=True)
+    partner_id = fields.Many2one("res.partner", readonly=True,
+                                 string="Related Partner")
     student_id = fields.Char(string="Student ID",
                              default=lambda self: _('New'), readonly=True)
     date_of_birth = fields.Datetime(default=False)
     age = fields.Integer(string="Age")
     room_id = fields.Many2one("hostel.room", readonly=True)
-    email = fields.Char(string="Email")
+    email = fields.Char(string="Email", required=True)
     image = fields.Image(string="Image")
     receive_mail = fields.Boolean(default=False, )
     street = fields.Char(string="Street")
@@ -41,9 +42,33 @@ class HostelStudent(models.Model):
                                    compute='_compute_invoice_count')
     invoice_ids = fields.One2many("account.move", "student_id")
 
-    # leave_request_ids = fields.One2many("leave.request", "student_name",
-    #                                     ondelete='cascade')
     active = fields.Boolean(default=True)
+    monthly_amount = fields.Monetary(string="Monthly Amount",
+                                     related="room_id.total_rent")
+
+    currency_id = fields.Many2one('res.currency', string="Currency",
+                                  default=lambda
+                                      self: self.env.user.company_id.currency_id,
+                                  readonly=False,
+                                  )
+    invoice_status = fields.Selection(
+        selection=[('pending', 'Pending'), ('done', 'Done')],
+        compute="_compute_invoice_status"
+    )
+    user_id = fields.Many2one("res.users", readonly=True, string="Related User")
+
+    @api.depends("invoice_ids")
+    def _compute_invoice_status(self):
+        invoice = self.invoice_ids.search(
+            [("invoice_date", ">", "2024-12-09"),
+             ("partner_id", "=", self.partner_id.id)
+             ], limit=1)
+        if invoice:
+            self.invoice_status = 'done'
+        else:
+            self.invoice_status = 'pending'
+
+        # for record in self.invoice_ids:
 
     @api.depends("invoice_ids")
     def _compute_invoice_count(self):
@@ -88,7 +113,7 @@ class HostelStudent(models.Model):
         """for allotting the student into available rooms"""
         room_list = self.env['hostel.room'].search(
             [('state', '!=', 'full')], limit=1)
-        print(room_list.id)
+        # print(room_list.id)
         if room_list.id:
             self.room_id = room_list.id
         else:
@@ -99,10 +124,10 @@ class HostelStudent(models.Model):
         # print(len(self.room_id.student_ids))
         room_temp = self.room_id
         self.room_id = ''
-        print(room_temp.state, "x1")
+        # print(room_temp.state, "x1")
         if len(self.room_id.student_ids) == 0:
             room_temp.state = 'cleaning'
-            print(room_temp.state, "x2")
+            # print(room_temp.state, "x2")
             self.env["cleaning.service"].create(
                 [{'room_id': room_temp.id, }])
         self.active = False
@@ -125,3 +150,20 @@ class HostelStudent(models.Model):
             'domain': [('student_id', '=', self.name)],
             "view_mode": "list,form",
         }
+
+    def create_student_user(self):
+        user = self.env['res.users'].create([{
+            'name': self.partner_id.name,
+            'login': self.partner_id.email,
+            'partner_id': self.partner_id.id,
+        }])
+        self.user_id = user.id
+
+    # def create_student_user(self):
+    #     user_vals = {
+    #         'name': self.partner_id.name,
+    #         'login': self.partner_id.name,
+    #         'partner_id': self.partner_id.id,
+    #     }
+    #     user = self.env['res.users'].create(user_vals)
+    #     self.user_id = user.id

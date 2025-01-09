@@ -39,13 +39,14 @@ class HostelRoom(models.Model):
                                         ('partial', 'Partial'),
                                         ('full', 'Full'),
                                         ('cleaning', 'Cleaning')],
-                             compute='_compute_current_state', store=True)
+                             compute='compute_current_state', store=True)
     student_ids = fields.One2many("hostel.student",
                                   "room_id")
     person_count = fields.Integer(compute='_compute_person_count', )
 
     facility_id = fields.Many2many("hostel.facility", string="Facilities")
     total_rent = fields.Monetary(compute="_compute_total_rent")
+    pending_amount = fields.Monetary(compute="_compute_pending_amount")
 
     @api.depends('rent', 'facility_id')
     def _compute_total_rent(self):
@@ -76,7 +77,7 @@ class HostelRoom(models.Model):
             #     record.person_count = 0
 
     @api.depends('person_count', 'bed_count', "student_ids")
-    def _compute_current_state(self):
+    def compute_current_state(self):
         """for changing the state of room according to count of students per room"""
         for record in self:
             if record.bed_count == 0:
@@ -156,5 +157,55 @@ class HostelRoom(models.Model):
             raise ValidationError("There are no students to invoice")
 
     def action_monthly_automatic_invoice(self):
-        rooms_with_students = self.search([("student_ids", '!=', "False")])
-        print(rooms_with_students)
+        rooms_with_students = self.search([("student_ids", '!=', False)])
+        for room in rooms_with_students:
+            for record in room.student_ids:
+                before_30_days = date_utils.subtract(today(), months=1)
+                existing_invoice = room.env['account.move'].search(
+                    [("partner_id", "=", record.partner_id.id),
+                     ("invoice_date", ">", before_30_days),
+                     ("state", "!=", "cancel")], limit=1)
+                if existing_invoice:
+                    continue
+                invoice_vals = {
+                    'move_type': 'out_invoice',
+                    'partner_id': record.partner_id.id,
+                    'student_id': record.id,
+                    # 'default_state': 'posted',
+                    # 'amount_total': self.total_rent,
+                    'invoice_line_ids': [
+                        (0, None, {
+                            'product_id': self.env.ref(
+                                "hostel.hostel_rent_product").id,
+                            'name': 'Hostel Rent',
+                            'quantity': 1,
+                            'price_unit': room.total_rent,
+                            # 'price_subtotal': self.total_rent,
+                        }),
+                    ],
+                }
+                inv = self.env['account.move'].create([invoice_vals])
+                inv.action_post()
+                if record.receive_mail:
+                    template = self.env.ref(
+                        'account.email_template_edi_invoice')
+                    template.send_mail(inv.id, force_send=True)
+
+    @api.depends('student_ids')
+    def _compute_pending_amount(self):
+        if self.student_ids:
+            for student in self.student_ids:
+                # not_paid = student.invoice_ids.search(
+                #     [("state", "=", "posted"),
+                #      ("payment_state", "in", ("not_paid", "partial"))])
+                not_paid = student.invoice_ids.filtered(
+                    lambda inv: inv.state == "posted" and inv.payment_state in (
+                        "not_paid", "partial"))
+                # print(self.student_ids.invoice_ids)
+                # print(not_paid)
+                to_pay = 0
+                for record in not_paid:
+                    to_pay += record.amount_residual
+                self.pending_amount = to_pay
+        else:
+            self.pending_amount = 0

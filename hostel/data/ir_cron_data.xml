@@ -14,4 +14,24 @@
             <!--            <field name="numbercall">-1</field>-->
         </record>
     </data>
+
+
+    <record id="action_create_user_on_student_creation"
+            model="ir.actions.server">
+        <field name="name">Create User on Student Creation</field>
+        <field name="model_id" ref="hostel.model_hostel_student"/>
+        <field name="state">code</field>
+        <field name="code">record.create_student_user()</field>
+    </record>
+    <record id="action_create_user_on_student_creation2"
+            model="base.automation">
+        <field name="name">Create User</field>
+        <field name="model_id" ref="hostel.model_hostel_student"/>
+        <field name="trigger">on_create_or_write</field>
+        <field name="action_server_ids"
+               eval="[(4, ref('action_create_user_on_student_creation'))]"/>
+        <field name="trigger_field_ids"
+               eval="[(4, ref('hostel.field_hostel_student__student_id'))]"/>
+    </record>
+
 </odoo>
