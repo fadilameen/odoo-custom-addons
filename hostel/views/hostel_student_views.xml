@@ -33,6 +33,8 @@
                             class="oe_highlight"/>
                     <button name="action_vacate_room" string="Vacate Room"
                             type="object"/>
+                    <button name="compute_invoice_status" string="test"
+                            type="object"/>
 
                 </header>
                 <sheet>
@@ -67,6 +69,7 @@
                             <field name="user_id"/>
 
                             <field name="company_id"/>
+                            <!--                            <field name="current_student_status"/>-->
                         </group>
                     </group>
                     <notebook>

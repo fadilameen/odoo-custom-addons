@@ -21,10 +21,12 @@ class CleaningService(models.Model):
                                      self: self.env.user.company_id.id)
 
     def action_assign_cleaning_service(self):
+        """assign button action to assign current user"""
         # print(self.env.user.name)
         self.cleaning_staff = self.env.user
         self.state = "assigned"
 
     def action_complete(self):
+        """Complete button action"""
         self.state = "done"
         self.room_id.compute_current_state()

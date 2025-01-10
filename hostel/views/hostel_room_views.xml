@@ -28,8 +28,8 @@
                             string="Monthly Invoice"
                             type="object"
                             class="oe_highlight"/>
-                    <button name="compute_current_state" string="test"
-                            type="object"/>
+                    <!--                    <button name="compute_current_state" string="test"-->
+                    <!--                            type="object"/>-->
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
@@ -44,10 +44,7 @@
                                    widget="many2many_tags"/>
                         </group>
                         <group>
-
                             <field name="currency_id"/>
-
-
                             <field name="rent"/>
                             <field name="person_count"/>
                             <field name="total_rent"/>

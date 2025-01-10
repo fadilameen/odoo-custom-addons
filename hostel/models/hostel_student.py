@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import datetime
 from email.policy import default
 from itertools import count
 
@@ -7,6 +8,7 @@ from dateutil.utils import today
 from odoo import api, fields, models, _
 from odoo.api import readonly
 from odoo.exceptions import ValidationError
+from odoo.tools import date_utils
 
 
 class HostelStudent(models.Model):
@@ -49,29 +51,46 @@ class HostelStudent(models.Model):
     currency_id = fields.Many2one('res.currency', string="Currency",
                                   default=lambda
                                       self: self.env.user.company_id.currency_id,
-                                  readonly=False,
-                                  )
+                                  readonly=False)
+    leave_request_ids = fields.One2many("leave.request",
+                                        inverse_name="student_name")
     invoice_status = fields.Selection(
         selection=[('pending', 'Pending'), ('done', 'Done')],
-        compute="_compute_invoice_status"
+        compute="compute_invoice_status", store=True
     )
     user_id = fields.Many2one("res.users", readonly=True, string="Related User")
 
-    @api.depends("invoice_ids")
-    def _compute_invoice_status(self):
-        invoice = self.invoice_ids.search(
-            [("invoice_date", ">", "2024-12-09"),
-             ("partner_id", "=", self.partner_id.id)
-             ], limit=1)
-        if invoice:
-            self.invoice_status = 'done'
-        else:
-            self.invoice_status = 'pending'
+    # current_student_status = fields.Selection(
+    #     selection=[("absent", "Absent"), ('present', 'Present')])
 
-        # for record in self.invoice_ids:
+    # @api.depends("leave_request_ids")
+    # def compute_current_student_status(self):
+    #     print(self.leave_request_ids)
+
+    @api.depends("invoice_ids")
+    def compute_invoice_status(self):
+        """to compute the status of invoice """
+        before_30_days = date_utils.subtract(today(), months=1)
+        # print(before_30_days)
+        for record in self:
+            invoice = record.invoice_ids.search(
+                [("invoice_date", ">", before_30_days),
+                 ("partner_id", "=", record.partner_id.id)
+                 ], limit=1)
+
+            if invoice:
+                print("done")
+                record.invoice_status = 'done'
+            else:
+                print("pending")
+                record.invoice_status = 'pending'
+
+            # for record in self.invoice_ids:
 
     @api.depends("invoice_ids")
     def _compute_invoice_count(self):
+        """to compute the count of invoice related to a student"""
+
         for record in self:
             record.invoice_count = len(record.invoice_ids)
 
@@ -112,7 +131,7 @@ class HostelStudent(models.Model):
     def action_alot_room(self):
         """for allotting the student into available rooms"""
         room_list = self.env['hostel.room'].search(
-            [('state', '!=', 'full')], limit=1)
+            [("state", "not in", ["full", "cleaning"])], limit=1)
         # print(room_list.id)
         if room_list.id:
             self.room_id = room_list.id
@@ -142,6 +161,7 @@ class HostelStudent(models.Model):
                 record.age = False
 
     def action_get_invoice(self):
+        """to display a list of invoice related to a student"""
         print(self.name)
         return {
             "type": "ir.actions.act_window",
@@ -152,6 +172,7 @@ class HostelStudent(models.Model):
         }
 
     def create_student_user(self):
+        """to create a user """
         user = self.env['res.users'].create([{
             'name': self.partner_id.name,
             'login': self.partner_id.email,

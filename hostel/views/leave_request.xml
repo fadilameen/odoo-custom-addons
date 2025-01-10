@@ -22,15 +22,25 @@
                 <header>
                     <button name="action_approve" type="object"
                             string="Approve" class="oe_highlight"/>
+                    <!--                    <button name="action_cancel" type="object"-->
+                    <!--                            string="Cancel" />-->
+                    <!--                    <button name="test" type="object"-->
+                    <!--                            string="test" class="oe_highlight"/>-->
 
                     <field name="status" widget="statusbar"
                     />
                 </header>
                 <sheet>
                     <group>
-                        <field name="student_name"/>
-                        <field name="leave_date"/>
-                        <field name="arrival_date"/>
+                        <group>
+                            <field name="student_name"/>
+                            <field name="leave_date"/>
+                            <field name="arrival_date"/>
+                        </group>
+                        <group>
+                            <field name="current_date"/>
+                            <field name="leave_state"/>
+                        </group>
                     </group>
                 </sheet>
             </form>

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from re import search
+
 from dateutil.utils import today
 
 from odoo import api, fields, models, _
@@ -102,9 +104,32 @@ class HostelRoom(models.Model):
                 'room_sequence_code')
         return super(HostelRoom, self).create(vals)
 
-    def action_monthly_invoice(self):
-        if self.student_ids:
+    def name(self, a, b=False):
+        print("hello world", self)
+        return [a, b]
 
+    # def action_monthly_invoice(self):
+    #
+    #     print(self.room_number, (self.id), (self), self.name(10, 20))
+    #     print(self.env["hostel.room"].name(5, 2))
+    #     print(self.company_id.currency_id)
+    #     print(sum(self.search([]).mapped('rent')))
+    #     # tot = 0
+    #     # for rec in self.search([]):
+    #     #     tot = tot + rec.rent
+    #     # print(tot)
+    #     print(self.search_read([("rent", '>', 100)], ["rent"]))
+    #     record_ids = self.env["sale.order"].browse(2)
+    #
+    #     print("search",
+    #           record_ids.order_line.search(
+    #               [("product_uom_qty", ">", 10), ("order_id", "=", 2)]))
+    #     print("filtered", record_ids.order_line.filtered(
+    #         lambda x: x.product_uom_qty > 10))
+    #
+    def action_monthly_invoice(self):
+        """for generating monthly invoice using button"""
+        if self.student_ids:
             for record in self.student_ids:
                 before_30_days = date_utils.subtract(today(), months=1)
                 existing_invoice = self.env['account.move'].search(
@@ -143,6 +168,7 @@ class HostelRoom(models.Model):
             raise ValidationError("There are no students to invoice")
 
     def action_monthly_automatic_invoice(self):
+        """for generating monthly invoice automatically"""
         rooms_with_students = self.search([("student_ids", '!=', False)])
         for room in rooms_with_students:
             for record in room.student_ids:
@@ -179,6 +205,7 @@ class HostelRoom(models.Model):
 
     @api.depends('student_ids')
     def _compute_pending_amount(self):
+        """to compute pending amount in each room"""
         if self.student_ids:
             for student in self.student_ids:
                 # not_paid = student.invoice_ids.search(

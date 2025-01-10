@@ -33,5 +33,5 @@
         <field name="trigger_field_ids"
                eval="[(4, ref('hostel.field_hostel_student__student_id'))]"/>
     </record>
-
 </odoo>
+
