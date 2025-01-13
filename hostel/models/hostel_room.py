@@ -48,7 +48,7 @@ class HostelRoom(models.Model):
 
     facility_id = fields.Many2many("hostel.facility", string="Facilities")
     total_rent = fields.Monetary(compute="_compute_total_rent")
-    pending_amount = fields.Monetary(compute="_compute_pending_amount")
+    pending_amount = fields.Monetary(compute="compute_pending_amount")
     cleaning_ids = fields.One2many('cleaning.service', "room_id")
 
     @api.depends('rent', 'facility_id')
@@ -158,11 +158,11 @@ class HostelRoom(models.Model):
                         ],
                     }
                     inv = self.env['account.move'].create([invoice_vals])
-                    inv.action_post()
-                    if record.receive_mail:
-                        template = self.env.ref(
-                            'account.email_template_edi_invoice')
-                        template.send_mail(inv.id, force_send=True)
+                    # inv.action_post()
+                    # if record.receive_mail:
+                    #     template = self.env.ref(
+                    #         'account.email_template_edi_invoice')
+                    #     template.send_mail(inv.id, force_send=True)
 
         else:
             raise ValidationError("There are no students to invoice")
@@ -197,16 +197,17 @@ class HostelRoom(models.Model):
                     ],
                 }
                 inv = self.env['account.move'].create([invoice_vals])
-                inv.action_post()
-                if record.receive_mail:
-                    template = self.env.ref(
-                        'account.email_template_edi_invoice')
-                    template.send_mail(inv.id, force_send=True)
+                # inv.action_post()
+                # if record.receive_mail:
+                #     template = self.env.ref(
+                #         'account.email_template_edi_invoice')
+                #     template.send_mail(inv.id, force_send=True)
 
     @api.depends('student_ids')
-    def _compute_pending_amount(self):
+    def compute_pending_amount(self):
         """to compute pending amount in each room"""
         if self.student_ids:
+            to_pay = 0
             for student in self.student_ids:
                 # not_paid = student.invoice_ids.search(
                 #     [("state", "=", "posted"),
@@ -215,10 +216,11 @@ class HostelRoom(models.Model):
                     lambda inv: inv.state == "posted" and inv.payment_state in (
                         "not_paid", "partial"))
                 # print(self.student_ids.invoice_ids)
-                # print(not_paid)
-                to_pay = 0
+                print(not_paid)
+                # to_pay = sum(not_paid.mapped('amount_residual'))
                 for record in not_paid:
                     to_pay += record.amount_residual
-                self.pending_amount = to_pay
+            self.pending_amount = to_pay
+
         else:
             self.pending_amount = 0

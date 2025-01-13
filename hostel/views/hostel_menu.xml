@@ -6,12 +6,15 @@
               parent="root_menu"/>
     <menuitem id="hostel_student_menu" action="hostel_student_action"
               parent="root_menu"/>
-    <menuitem id="hostel_facility_menu" action="hostel_facility_action"
-              parent="root_menu"/>
     <menuitem id="leave_request_menu" action="leave_request_action"
               parent="root_menu"/>
+    <menuitem id="configuration_menu" name="configuration"
+              parent="root_menu"/>
+    <menuitem id="hostel_facility_menu" action="hostel_facility_action"
+              parent="configuration_menu"/>
     <menuitem id="hostel_invoice_menu" action="hostel_invoice_action"
-              parent="root_menu"/>
+              parent="configuration_menu"/>
     <menuitem id="cleaning_service_menu" action="cleaning_service_action"
-              parent="root_menu"/>
+              parent="configuration_menu"/>
+
 </odoo>

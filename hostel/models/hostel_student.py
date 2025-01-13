@@ -144,7 +144,7 @@ class HostelStudent(models.Model):
         room_temp = self.room_id
         self.room_id = ''
         # print(room_temp.state, "x1")
-        if len(self.room_id.student_ids) == 0:
+        if len(room_temp.student_ids) == 0:
             room_temp.state = 'cleaning'
             # print(room_temp.state, "x2")
             self.env["cleaning.service"].create(

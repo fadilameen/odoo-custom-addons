@@ -6,6 +6,7 @@ from dateutil.utils import today
 
 from odoo import fields, api
 from odoo import models
+from odoo.tools import date_utils
 
 
 class LeaveRequest(models.Model):
@@ -16,11 +17,13 @@ class LeaveRequest(models.Model):
     student_name = fields.Many2one("hostel.student", ondelete='cascade')
     leave_date = fields.Date(string="Leave Date", required=True)
     arrival_date = fields.Date(string="Arrival Date", required=True)
-    status = fields.Selection(
-        selection=[('new', 'New'), ('approved', 'Approved')], default='new')
+    status = fields.Selection(copy=False,
+                              selection=[('new', 'New'),
+                                         ('approved', 'Approved')],
+                              default='new')
     leave_state = fields.Selection(
         selection=[('absent', 'Absent'), ('present', 'Present')],
-        compute="compute_leave_state",
+        compute="compute_leave_state", copy=False
     )
     current_date = fields.Date(compute="_compute_current_date")
 
@@ -37,9 +40,13 @@ class LeaveRequest(models.Model):
         """to approve the leave request"""
         self.student_name.room_id.state = 'cleaning'
         self.env["cleaning.service"].create(
-            [{'room_id': self.student_name.room_id.id, }])
+            [{'room_id': self.student_name.room_id.id,
+              'start_time': date_utils.add(datetime.datetime.now(), hours=1)
+              }])
 
     def action_approve(self):
+        # print(datetime.datetime.now())
+        # print(date_utils.add(datetime.datetime.now(), hours=5))
         """approve action and checking cleaning state"""
         self.status = 'approved'
         if len(self.student_name.room_id.student_ids) == len(

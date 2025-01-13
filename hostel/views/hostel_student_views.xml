@@ -30,11 +30,12 @@
                 <header>
                     <button name="action_alot_room" string="Alot Room"
                             type="object"
-                            class="oe_highlight"/>
+                            class="oe_highlight" invisible="room_id"
+                    />
                     <button name="action_vacate_room" string="Vacate Room"
-                            type="object"/>
-                    <button name="compute_invoice_status" string="test"
-                            type="object"/>
+                            type="object" invisible="not room_id"/>
+                    <!--                    <button name="compute_invoice_status" string="test"-->
+                    <!--                            type="object"/>-->
 
                 </header>
                 <sheet>

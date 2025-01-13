@@ -9,9 +9,9 @@
                 <header>
                     <button name="action_assign_cleaning_service" type="object"
                             class="oe_highlight"
-                            string="Assign"/>
+                            string="Assign" invisible="state !='new'"/>
                     <button name="action_complete" type="object"
-                            string="Complete"/>
+                            string="Complete" invisible="state =='done'"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>

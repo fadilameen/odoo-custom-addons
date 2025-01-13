@@ -28,7 +28,7 @@
                             string="Monthly Invoice"
                             type="object"
                             class="oe_highlight"/>
-                    <!--                    <button name="compute_current_state" string="test"-->
+                    <!--                    <button name="compute_pending_amount" string="test"-->
                     <!--                            type="object"/>-->
                     <field name="state" widget="statusbar"/>
                 </header>

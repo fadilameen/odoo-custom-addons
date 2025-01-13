@@ -21,7 +21,8 @@
             <form string="test">
                 <header>
                     <button name="action_approve" type="object"
-                            string="Approve" class="oe_highlight"/>
+                            string="Approve" class="oe_highlight"
+                            invisible="status=='approved'"/>
                     <!--                    <button name="action_cancel" type="object"-->
                     <!--                            string="Cancel" />-->
                     <!--                    <button name="test" type="object"-->
