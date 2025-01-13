@@ -32,7 +32,7 @@ class HostelRoom(models.Model):
     company_id = fields.Many2one('res.company', copy=False,
                                  string="Company",
                                  default=lambda
-                                     self: self.env.user.company_id.id)
+                                     self: self.env.company.id)
     currency_id = fields.Many2one('res.currency', string="Currency",
                                   related='company_id.currency_id',
                                   readonly=False,

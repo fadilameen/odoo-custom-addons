@@ -9,7 +9,9 @@
             <list string="Channel">
                 <field name="room_number"/>
                 <field name="room_type"/>
-                <field name="state"/>
+                <field name="state" decoration-danger="state=='full'"
+                       decoration-warning="state=='partial'"
+                       decoration-success="state=='empty'"/>
                 <field name="bed_count"/>
                 <field name="person_count"/>
                 <field name="rent"/>
@@ -28,7 +30,7 @@
                             string="Monthly Invoice"
                             type="object"
                             class="oe_highlight"/>
-                    <!--                    <button name="compute_pending_amount" string="test"-->
+                    <!--                    <button name="print_partner" string="test"-->
                     <!--                            type="object"/>-->
                     <field name="state" widget="statusbar"/>
                 </header>
@@ -67,12 +69,25 @@
         <field name="arch" type="xml">
             <search string="test">
                 <field name="room_number"/>
+                <field name="bed_count"/>
+                <field name="total_rent"/>
+                <field name="person_count"/>
                 <separator/>
-                <filter string="Available" name="state"
+                <filter string="Available" name="available"
                         domain="[('state', '!=', 'full')]"/>
+                <filter string="Empty" name="empty"
+                        domain="[('state', '=', 'empty')]"/>
+                <filter string="Partial" name="partial"
+                        domain="[('state', '=', 'partial')]"/>
+                <filter string="Full" name="full"
+                        domain="[('state', '=', 'full')]"/>
+                <filter string="Cleaning" name="cleaning"
+                        domain="[('state', '=', 'cleaning')]"/>
                 <group string="Group By">
                     <filter string="Bed Count" name="group_by_bed_count"
                             context="{'group_by': 'bed_count_string'}"/>
+                    <filter string="State" name="group_by_status"
+                            context="{'group_by': 'state'}"/>
                 </group>
             </search>
         </field>
@@ -82,6 +97,6 @@
         <field name="name">Rooms</field>
         <field name="res_model">hostel.room</field>
         <field name="view_mode">list,form</field>
-        <field name="context">{'search_default_state':1}</field>
+        <field name="context">{'search_default_available':1}</field>
     </record>
 </odoo>
