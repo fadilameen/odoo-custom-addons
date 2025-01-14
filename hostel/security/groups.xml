@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="res.groups" id="hostel_warden">
+            <field name="name">Warden</field>
+            <field name="category_id"
+                   ref="base.module_category_human_resources_hostel"/>
+
+        </record>
+        <record model="res.groups" id="hostel_student">
+            <field name="name">Student</field>
+            <field name="category_id"
+                   ref="base.module_category_human_resources_hostel"/>
+        </record>
+        <record model="res.groups" id="hostel_staff">
+            <field name="name">Staff</field>
+            <field name="category_id"
+                   ref="base.module_category_human_resources_hostel"/>
+        </record>
+    </data>
+</odoo>

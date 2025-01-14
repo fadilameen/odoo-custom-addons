@@ -7,6 +7,10 @@
             <search string="hostel_search">
                 <filter string="Archived" name="inactive"
                         domain="[('active', '=', False)]"/>
+                <!--                <group string="Group By">-->
+                <filter string="Room" name="group_by_room"
+                        context="{'group_by': 'room_id'}"/>
+                <!--                </group>-->
             </search>
         </field>
     </record>
