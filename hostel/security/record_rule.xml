@@ -2,7 +2,7 @@
     <record id="hostel_room_company_restriction_rule" model="ir.rule">
         <field name="name">Company can see only their own data</field>
         <field ref="hostel.model_hostel_room" name="model_id"/>
-        <field name="domain_force">[('company_id', 'in', company_ids +[False])]
+        <field name="domain_force">[('company_id', 'in', company_ids+[False])]
         </field>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="True"/>
@@ -10,3 +10,5 @@
         <field name="perm_unlink" eval="True"/>
     </record>
 </odoo>
+
+
