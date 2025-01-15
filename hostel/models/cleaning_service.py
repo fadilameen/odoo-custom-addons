@@ -15,10 +15,10 @@ class CleaningService(models.Model):
     state = fields.Selection(
         selection=[('new', 'New'), ('assigned', 'Assigned'), ('done', 'Done')],
         default='new')
-    company_id = fields.Many2one('res.company',
+    company_id = fields.Many2one('res.company', copy=False,
                                  string="Company",
                                  default=lambda
-                                     self: self.env.user.company_id.id)
+                                     self: self.env.company.id)
 
     def action_assign_cleaning_service(self):
         """assign button action to assign current user"""

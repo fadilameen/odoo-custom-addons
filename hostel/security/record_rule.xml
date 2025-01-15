@@ -1,6 +1,6 @@
 <odoo>
     <record id="hostel_room_company_restriction_rule" model="ir.rule">
-        <field name="name">Company can see only their own data</field>
+        <field name="name">Company can see only their own room</field>
         <field ref="hostel.model_hostel_room" name="model_id"/>
         <field name="domain_force">[('company_id', 'in', company_ids+[False])]
         </field>
@@ -9,6 +9,95 @@
         <field name="perm_create" eval="True"/>
         <field name="perm_unlink" eval="True"/>
     </record>
+    <record id="hostel_student_company_restriction_rule" model="ir.rule">
+        <field name="name">Company can see only their own student</field>
+        <field ref="hostel.model_hostel_student" name="model_id"/>
+        <field name="domain_force">[('company_id', 'in', company_ids+[False])]
+        </field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+    <record id="hostel_cleaning_service_company_restriction_rule"
+            model="ir.rule">
+        <field name="name">Company can see only their own cleaning service
+        </field>
+        <field ref="hostel.model_cleaning_service" name="model_id"/>
+        <field name="domain_force">[('company_id', 'in', company_ids+[False])]
+        </field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+    <record id="hostel_leave_requests_company_restriction_rule" model="ir.rule">
+        <field name="name">Company can see only their own leave requests</field>
+        <field ref="hostel.model_leave_request" name="model_id"/>
+        <field name="domain_force">[('company_id', 'in', company_ids+[False])]
+        </field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+    <record id="hostel_facility_company_restriction_rule" model="ir.rule">
+        <field name="name">Company can see only their own facility</field>
+        <field ref="hostel.model_hostel_facility" name="model_id"/>
+        <field name="domain_force">[('company_id', 'in', company_ids+[False])]
+        </field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+
+    <record id="hostel_student_own_student_rule" model="ir.rule">
+        <field name="name">Student can see only their student</field>
+        <field ref="hostel.model_hostel_student" name="model_id"/>
+        <field name="groups"
+               eval="[Command.link(ref('hostel.hostel_student'))]"/>
+        <field name="domain_force">[('user_id','=',user.id)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+    <record id="hostel_student_own_room_rule" model="ir.rule">
+        <field name="name">Student can see only their room</field>
+        <field ref="hostel.model_hostel_room" name="model_id"/>
+        <field name="groups"
+               eval="[Command.link(ref('hostel.hostel_student'))]"/>
+        <field name="domain_force">[("student_ids.user_id", "=",user.id)]
+        </field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+    <record id="hostel_student_own_leave_request_rule" model="ir.rule">
+        <field name="name">Student can see only their leave requests</field>
+        <field ref="hostel.model_leave_request" name="model_id"/>
+        <field name="groups"
+               eval="[Command.link(ref('hostel.hostel_student'))]"/>
+        <field name="domain_force">[("student_name.user_id", "=",user.id)]
+        </field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+    <record id="hostel_staff_own_cleaning_request_rule" model="ir.rule">
+        <field name="name">Staff can see only their Cleaning requests</field>
+        <field ref="hostel.model_cleaning_service" name="model_id"/>
+        <field name="groups"
+               eval="[Command.link(ref('hostel.hostel_staff'))]"/>
+        <field name="domain_force">[('cleaning_staff', 'in', [user.id,False])]
+        </field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
 </odoo>
-
-

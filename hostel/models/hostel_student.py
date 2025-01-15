@@ -36,10 +36,10 @@ class HostelStudent(models.Model):
                                domain="[('country_id', '=?', country_id)]")
     zip = fields.Char(string="Zip")
     country_id = fields.Many2one("res.country", string="Country")
-    company_id = fields.Many2one('res.company', store=True, copy=False,
+    company_id = fields.Many2one('res.company', copy=False, store=True,
                                  string="Company",
                                  default=lambda
-                                     self: self.env.user.company_id.id)
+                                     self: self.env.company.id)
     invoice_count = fields.Integer(string="Invoices", default=0,
                                    compute='_compute_invoice_count')
     invoice_ids = fields.One2many("account.move", "student_id")

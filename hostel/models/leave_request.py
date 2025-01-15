@@ -26,6 +26,10 @@ class LeaveRequest(models.Model):
         compute="compute_leave_state", copy=False
     )
     current_date = fields.Date(compute="_compute_current_date")
+    company_id = fields.Many2one('res.company', copy=False,
+                                 string="Company",
+                                 default=lambda
+                                     self: self.env.company.id)
 
     @api.depends('current_date', 'status')
     def compute_leave_state(self):
