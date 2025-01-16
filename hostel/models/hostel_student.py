@@ -5,7 +5,7 @@ from itertools import count
 
 from dateutil.utils import today
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, Command
 from odoo.api import readonly
 from odoo.exceptions import ValidationError
 from odoo.tools import date_utils
@@ -177,6 +177,10 @@ class HostelStudent(models.Model):
             'name': self.partner_id.name,
             'login': self.partner_id.email,
             'partner_id': self.partner_id.id,
+            'groups_id': [
+                Command.link(self.env.ref("base.group_user").id),
+                Command.link(self.env.ref("hostel.hostel_student").id)],
+
         }])
         self.user_id = user.id
 

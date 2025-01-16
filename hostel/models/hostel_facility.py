@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+"""Hostel facility"""
 
 from odoo import fields, models
 
