@@ -87,12 +87,15 @@ class HostelStudent(models.Model):
 
             # for record in self.invoice_ids:
 
+    def action_dummy(self):
+        ()
+
     @api.depends("invoice_ids")
     def _compute_invoice_count(self):
         """to compute the count of invoice related to a student"""
 
         for record in self:
-            record.invoice_count = len(record.invoice_ids)
+            record.invoice_count = len(record.sudo().invoice_ids)
 
     @api.constrains('room_id')
     def _check_room_id(self):
@@ -169,6 +172,7 @@ class HostelStudent(models.Model):
             "res_model": "account.move",
             'domain': [('student_id', '=', self.name)],
             "view_mode": "list,form",
+
         }
 
     def create_student_user(self):
