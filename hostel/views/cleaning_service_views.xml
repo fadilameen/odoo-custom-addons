@@ -16,7 +16,12 @@
                 </header>
                 <sheet>
                     <group>
-                        <field name="room_id"/>
+                        <t groups="hostel.hostel_staff">
+                            <field name="room_id" readonly="1"/>
+
+                        </t>
+                        <field name="room_id"
+                               groups="hostel.hostel_warden,hostel.hostel_student"/>
                         <field name="start_time"/>
                         <field name="cleaning_staff"/>
                         <field name="company_id"/>

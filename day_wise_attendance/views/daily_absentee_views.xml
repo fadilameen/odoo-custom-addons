@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="daily_absentee_list" model="ir.ui.view">
+
+        <field name="name">daily.absentee.list</field>
+        <field name="model">daily.absentee</field>
+        <field name="arch" type="xml">
+            <list string="test">
+                <field name="name"/>
+                <field name="date"/>
+            </list>
+        </field>
+    </record>
+    <record id="daily_absentee_search" model="ir.ui.view">
+        <field name="name">daily.absentee.search</field>
+        <field name="model">daily.absentee</field>
+        <field name="arch" type="xml">
+            <search string="channel">
+                <field name="name"/>
+                <field name="date"/>
+                <group string="Group By">
+                    <filter string="Month" name="group_by_month"
+                            context="{'group_by': 'date:month'}"/>
+                    <filter string="Date" name="group_by_day"
+                            context="{'group_by': 'date:day'}"/>
+
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="daily_absentee_action" model="ir.actions.act_window">
+        <field name="name">Daily Absentees</field>
+        <field name="res_model">daily.absentee</field>
+        <field name="view_mode">list</field>
+        <field name="context">
+            {'search_default_group_by_month':1,'search_default_group_by_day':1}
+        </field>
+    </record>
+</odoo>

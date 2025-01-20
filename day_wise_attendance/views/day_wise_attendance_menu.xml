@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <menuitem id="root_menu" name="Day Wise Attendance"/>
+    <menuitem id="day_wise_absentee_menu" name="Day Wise Absentees"
+              parent="root_menu" action="daily_absentee_action"/>
+</odoo>

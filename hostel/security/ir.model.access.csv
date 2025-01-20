@@ -5,8 +5,8 @@ access_hostel_facility_warden,access.hostel.facility,model_hostel_facility,hoste
 access_leave_request_warden,access.leave.request,model_leave_request,hostel.hostel_warden,1,1,1,1
 access_cleaning_service_warden,access.cleaning.service,model_cleaning_service,hostel.hostel_warden,1,1,1,1
 access_hostel_room_student,access.hostel.room,model_hostel_room,hostel.hostel_student,1,0,0,0
-access_hostel_student_student,access.hostel.student,model_hostel_student,hostel.hostel_student,1,0,0,0
+access_hostel_student_student,access.hostel.student,model_hostel_student,hostel.hostel_student,1,1,0,0
 access_leave_request_student,access.leave.request,model_leave_request,hostel.hostel_student,1,1,1,0
-access_cleaning_service_staff,access.cleaning.service,model_cleaning_service,hostel.hostel_staff,1,1,1,1
+access_cleaning_service_staff,access.cleaning.service,model_cleaning_service,hostel.hostel_staff,1,1,0,0
 access_hostel_room_staff,access.hostel.room,model_hostel_room,hostel.hostel_staff,1,0,0,0
 access_hostel_student_staff,access.hostel.student,model_hostel_student,hostel.hostel_staff,1,0,0,0

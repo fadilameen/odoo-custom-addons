@@ -3,7 +3,7 @@
     'name': 'Hostel',
     'version': '18.0.1.0.0',
     'summary': 'Manage hostel rooms and students',
-    'sequence': 1,
+    'sequence': 10,
     'description': """"
 Hostel Management
 ====================

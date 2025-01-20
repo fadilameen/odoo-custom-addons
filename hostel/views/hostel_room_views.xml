@@ -28,7 +28,7 @@
                 <header>
                     <button name="action_monthly_invoice"
                             string="Monthly Invoice"
-                            type="object"
+                            type="object" groups="hostel.hostel_warden"
                             class="oe_highlight"/>
                     <!--                    <button name="print_partner" string="test"-->
                     <!--                            type="object"/>-->
@@ -50,13 +50,15 @@
                             <field name="rent"/>
                             <field name="person_count"/>
                             <field name="total_rent"/>
-                            <field name="pending_amount"/>
+                            <field name="pending_amount"
+                                   groups="hostel.hostel_warden"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Students">
                             <field name="student_ids"/>
                         </page>
+                        readonly
                     </notebook>
                 </sheet>
                 <chatter/>
