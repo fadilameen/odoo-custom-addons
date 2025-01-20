@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
-import datetime
-from email.policy import default
-from itertools import count
 
 from dateutil.utils import today
 
 from odoo import api, fields, models, _, Command
-from odoo.api import readonly
 from odoo.exceptions import ValidationError
 from odoo.tools import date_utils
 
@@ -67,7 +63,7 @@ class HostelStudent(models.Model):
     # def compute_current_student_status(self):
     #     print(self.leave_request_ids)
 
-    @api.depends("invoice_ids")
+    @api.depends("invoice_ids", "invoice_ids.state")
     def compute_invoice_status(self):
         """to compute the status of invoice """
         before_30_days = date_utils.subtract(today(), months=1)
