@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <record id="sale_order_line_list_inherit" model="ir.ui.view">
+    <record id="sale_order_line_inherit" model="ir.ui.view">
         <field name="name">sale.order.line.list.inherit</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <field name="product_uom_qty" position="after">
-                <!--                <group>-->
+            <xpath expr="//field[@name='order_line']//list//field[@name='product_template_id']"
+                   position="after">
                 <field name="tolerance"/>
-                <!--                </group>-->
-            </field>
+            </xpath>
         </field>
     </record>
 </odoo>

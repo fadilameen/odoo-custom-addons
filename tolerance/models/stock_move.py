@@ -2,19 +2,26 @@
 from odoo import fields, models, api
 
 
-class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
+class StockMove(models.Model):
+    _inherit = 'stock.move'
 
-    tolerance = fields.Float(compute="_compute_tolerance", store=True,
-                             readonly=False)
+    tolerance = fields.Float()
+
+    @api.onchange("tolerance")
+    def test(self):
+        print("fun ")
+        x = (self.env["stock.picking"].search([("origin", "=", self.origin)]))
+        for y in x:
+            for record in (y.move_ids_without_package.product_id):
+                print(record.name)
 
     # min_qty = fields.Integer(compute="_compute_limit", store=True)
     # max_qty = fields.Integer(compute="_compute_limit", store=True)
 
-    @api.depends("order_id")
-    def _compute_tolerance(self):
-        for line in self:
-            line.tolerance = line.order_id.partner_id.tolerance
+    # @api.depends("picking_id")
+    # def _compute_tolerance(self):
+    #     for line in self:
+    #         line.tolerance = line.order_id.partner_id.tolerance
 
     # @api.onchange("tolerance", "product_uom_qty")
     # def _compute_limit(self):
