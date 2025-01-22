@@ -7,13 +7,13 @@ class StockMove(models.Model):
 
     tolerance = fields.Float()
 
-    @api.onchange("tolerance")
-    def test(self):
-        print("fun ")
-        x = (self.env["stock.picking"].search([("origin", "=", self.origin)]))
-        for y in x:
-            for record in (y.move_ids_without_package.product_id):
-                print(record.name)
+    # @api.onchange("tolerance")
+    # def test(self):
+    #     print("fun ")
+    #     x = (self.env["stock.picking"].search([("origin", "=", self.origin)]))
+    #     for y in x:
+    #         for record in (y.move_ids_without_package.product_id):
+    #             print(record.name)
 
     # min_qty = fields.Integer(compute="_compute_limit", store=True)
     # max_qty = fields.Integer(compute="_compute_limit", store=True)
