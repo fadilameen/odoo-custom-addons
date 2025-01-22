@@ -11,7 +11,7 @@ Helps to manage tolerance in quantities for various products.
 """,
     'category': 'Sales',
     'website': '',
-    'depends': ['base', 'sale_management', 'stock'],
+    'depends': ['base', 'sale_management', 'stock', 'purchase', ],
     'data': ['views/res_partner_views.xml',
              'views/sale_order_line_views.xml',
              'views/purchase_order_line_views.xml',
