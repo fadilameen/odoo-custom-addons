@@ -15,4 +15,4 @@ class StockMove(models.Model):
                 sale_line_id).tolerance
             print(tolerance)
             val['tolerance'] = tolerance
-        return super(StockMove, self).create(vals)
+        return super().create(vals)

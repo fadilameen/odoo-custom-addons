@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="tolerance_warning_view_form" model="ir.ui.view">
+        <field name="name">tolerance.warning.view.form</field>
+        <field name="model">tolerance.warning</field>
+        <field name="arch" type="xml">
+            <form string="Quantity Warning">
+                <group>
+                    <h5>The quantity entered is outside the acceptable tolerance
+                        range of this order.
+                        <br/>
+                        Do you want to proceed with this
+                        quantity?
+                    </h5>
+                </group>
+                <footer>
+                    <button name="action_accept" string="Accept" type="object"
+                            class="oe_highlight"/>
+                    <button name="action_decline" string="Don't Accept"
+                            class="oe_highlight"
+                            type="object"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">sale.order.view.form.inherit.module.name</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                //you can add your own paths here and if you need to add attrs
+                you can add attrs in the button
+                <button type="object" name="action_test" string="Button Test"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
