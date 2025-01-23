@@ -7,12 +7,11 @@ class StockMove(models.Model):
 
     tolerance = fields.Float(string="Tolerance")
 
-    @api.model
-    def create(self, vals):
-        """
-        Ensures tolerance is set from procurement or sale order line.
-        """
-        if not vals.get('tolerance') and 'sale_line_id' in vals:
-            sale_line = self.env['sale.order.line'].browse(vals['sale_line_id'])
-            vals['tolerance'] = sale_line.tolerance
-        return super(StockMove, self).create(vals)
+    # @api.model_create_multi
+    # def create(self, vals):
+    #     for val in vals:
+    #         if not val.get('tolerance') and 'sale_line_id' in val:
+    #             sale_line = self.env['sale.order.line'].browse(
+    #                 val['sale_line_id'])
+    #             val['tolerance'] = sale_line.tolerance
+    #     return super(StockMove, self).create(vals)
