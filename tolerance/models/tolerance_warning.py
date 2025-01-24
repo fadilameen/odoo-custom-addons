@@ -6,14 +6,13 @@ class ToleranceWarning(models.TransientModel):
     _description = "Tolerance Warning"
 
     def action_accept(self):
-        x = self.env["stock.picking"].browse(
-            self._context['operation_id']).button_validate()
-        print(x)
+        stock_picking = self.env["stock.picking"].browse(
+            self._context['operation_id'])
+        return stock_picking.with_context(
+            skip_tolerance_check=True).button_validate()
 
     def action_decline(self):
         print(self._context)
-        self.env["stock.picking"].browse(
-            self._context['operation_id']).action_cancel()
         # self.action_cancel()
 
 
