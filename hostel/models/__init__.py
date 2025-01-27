@@ -6,3 +6,5 @@ from . import hostel_facility
 from . import hostel_invoice
 from . import leave_request
 from . import cleaning_service
+from . import student_report
+from . import student_report_wizard
