@@ -27,7 +27,9 @@ The easy to use hostel management system which allows to add students and alloca
         'views/cleaning_service_views.xml',
         'report/ir_actions_report.xml',
         'report/student_report.xml',
+        'report/leave_request_report.xml',
         'views/student_report_wizard_views.xml',
+        'views/leave_request_report_wizard_views.xml',
         'views/hostel_menu.xml',
 
     ],

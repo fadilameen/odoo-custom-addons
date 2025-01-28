@@ -8,3 +8,5 @@ from . import leave_request
 from . import cleaning_service
 from . import student_report
 from . import student_report_wizard
+from . import leave_request_report_wizard
+from . import leave_request_report

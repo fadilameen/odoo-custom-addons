@@ -11,4 +11,15 @@
         <field name="binding_model_id" ref="hostel.model_hostel_student"/>
         <field name="binding_type">report</field>
     </record>
+    <record id="action_report_leave_request" model="ir.actions.report">
+        <field name="name">Leave Request Report</field>
+        <field name="model">leave.request</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hostel.report_leave_request</field>
+        <field name="report_file">hostel.report_leave_request</field>
+        <!--                <field name="print_report_name">'Student Report - %s' % (object.name)-->
+        <!--                </field>-->
+        <field name="binding_model_id" ref="hostel.model_leave_request"/>
+        <field name="binding_type">report</field>
+    </record>
 </odoo>

@@ -11,3 +11,4 @@ access_cleaning_service_staff,access.cleaning.service,model_cleaning_service,hos
 access_hostel_room_staff,access.hostel.room,model_hostel_room,hostel.hostel_staff,1,0,0,0
 access_hostel_student_staff,access.hostel.student,model_hostel_student,hostel.hostel_staff,1,0,0,0
 access_student_report_wizard,access.student.report.wizard,model_student_report_wizard,base.group_user,1,1,1,1
+access_leave_request_report_wizard,access.leave.request.report.wizard,model_leave_request_report_wizard,base.group_user,1,1,1,1

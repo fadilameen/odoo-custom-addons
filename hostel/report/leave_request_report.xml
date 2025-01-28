@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_leave_request">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2>Leave Request Report</h2>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <!--                                <th>SL No</th>-->
+                                <th>Name</th>
+                                <th>Room</th>
+                                <th>Start Date</th>
+                                <th>Arrival Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-if="not docs">
+                                <t t-foreach="data" t-as="student">
+                                    <tr>
+                                        <td>
+                                            <span t-esc="student['name']"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="student['room_number']"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="student['leave_date']"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="student['arrival_date']"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </t>
+                            <t t-else="">
+                                <t t-foreach="docs" t-as="student">
+                                    <tr>
+                                        <td>
+                                            <span t-field="student.student_name"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="student.student_name.room_id"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="student.leave_date"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="student.arrival_date"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

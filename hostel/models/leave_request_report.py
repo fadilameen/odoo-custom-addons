@@ -3,19 +3,17 @@
 from odoo import models, api
 
 
-class StudentReport(models.AbstractModel):
-    _name = 'report.hostel.report_student'
+class LeaveRequestReport(models.AbstractModel):
+    _name = 'report.hostel.report_leave_request'
 
     @api.model
     def _get_report_values(self, docids, data=None):
-        docs = self.env['hostel.student'].browse(docids)
-
-        print(docs)
+        docs = self.env["leave.request"].browse(docids)
         if data.get('report'):
             data = data['report']
         return {
-            # 'doc_ids': docs.ids,
-            'doc_model': 'hostel.student',
+            'doc_ids': docids,
+            'doc_model': 'leave.request',
             'docs': docs,
             'data': data,
         }

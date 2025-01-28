@@ -13,9 +13,9 @@
     <menuitem id="report_menu" name="Reporting" parent="root_menu"/>
     <menuitem id="students_report_menu" name="Students Report"
               action="student_report_wizard_action" parent="report_menu"/>
-    <menuitem id="leave_request_report_menu" name="Leave Request Report"
-
-              parent="report_menu"/>
+    <menuitem id="leave_request_report_menu"
+              action="leave_request_report_wizard_action"
+              name="Leave Request Report" parent="report_menu"/>
     <menuitem id="configuration_menu" name="configuration"
               parent="root_menu"/>
     <menuitem id="hostel_facility_menu" action="hostel_facility_action"
