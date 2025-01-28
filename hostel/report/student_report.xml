@@ -16,25 +16,41 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <t t-foreach="docs" t-as="student"
-                            >
-                                <tr>
-                                    <!--                                    <td>-->
-                                    <!--                                        <span t-esc="i"/>-->
-                                    <!--                                    </td>-->
-                                    <td>
-                                        <span t-field="student.name"/>
-                                    </td>
-                                    <td>
-                                        <span t-field="student.monthly_amount"/>
-                                    </td>
-                                    <td>
-                                        <span t-field="student.room_id"/>
-                                    </td>
-                                    <td>
-                                        <span t-field="student.invoice_status"/>
-                                    </td>
-                                </tr>
+                            <t t-if="not docs">
+                                <t t-foreach="data" t-as="student">
+                                    <tr>
+                                        <td>
+                                            <span t-esc="student['name']"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="student['total_rent']"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="student['room_number']"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="student['invoice_status']"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </t>
+                            <t t-else="">
+                                <t t-foreach="docs" t-as="student">
+                                    <tr>
+                                        <td>
+                                            <span t-field="student.name"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="student.monthly_amount"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="student.room_id"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="student.invoice_status"/>
+                                        </td>
+                                    </tr>
+                                </t>
                             </t>
                         </tbody>
                     </table>
