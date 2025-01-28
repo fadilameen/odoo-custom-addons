@@ -40,16 +40,16 @@ class StudentReportWizard(models.TransientModel):
             self.env.cr.execute(query)
             report = self.env.cr.dictfetchall()
             print(report)
-            student_ids = [record['id'] for record in report]
-            data = {
-                'student_ids': student_ids,
-            }
-        else:
-            students = self.env['hostel.student'].search([])
-            data = {
-                'student_ids': students.ids,
-            }
-            print(data.get('student_ids'))
+            # student_ids = [record['id'] for record in report]
+            # data = {
+            #     'student_ids': student_ids,
+            # }
+        # if not (self.student_ids or self.room_ids):
+        students = self.env['hostel.student'].search([])
+        data = {
+            'student_ids': students.ids,
+        }
+        print(data.get('student_ids'))
         return self.env.ref(
             'hostel.action_report_hostel_student').report_action(
             self, data=data)
