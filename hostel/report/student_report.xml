@@ -8,7 +8,7 @@
                     <table class="table table-sm">
                         <thead>
                             <tr>
-                                <th>SL No</th>
+                                <!--                                <th>SL No</th>-->
                                 <th>Name</th>
                                 <th>Monthly Rent</th>
                                 <th>Room</th>
@@ -17,11 +17,11 @@
                         </thead>
                         <tbody>
                             <t t-foreach="docs" t-as="student"
-                               t-let="i = $index + 1">
+                            >
                                 <tr>
-                                    <td>
-                                        <span t-esc="i"/>
-                                    </td>
+                                    <!--                                    <td>-->
+                                    <!--                                        <span t-esc="i"/>-->
+                                    <!--                                    </td>-->
                                     <td>
                                         <span t-field="student.name"/>
                                     </td>

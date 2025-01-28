@@ -47,7 +47,7 @@ class HostelRoom(models.Model):
     person_count = fields.Integer(compute='_compute_person_count', )
 
     facility_id = fields.Many2many("hostel.facility", string="Facilities")
-    total_rent = fields.Monetary(compute="_compute_total_rent")
+    total_rent = fields.Monetary(compute="_compute_total_rent", store=True)
     pending_amount = fields.Monetary(compute="compute_pending_amount")
     cleaning_ids = fields.One2many('cleaning.service', "room_id")
 
@@ -105,7 +105,7 @@ class HostelRoom(models.Model):
         return super(HostelRoom, self).create(vals)
 
     def name(self, a, b=False):
-        print("hello world", self)
+        # print("hello world", self)
         return [a, b]
 
     # def action_monthly_invoice(self):
@@ -216,7 +216,7 @@ class HostelRoom(models.Model):
                     lambda inv: inv.state == "posted" and inv.payment_state in (
                         "not_paid", "partial"))
                 # print(self.student_ids.invoice_ids)
-                print(not_paid)
+                # print(not_paid)
                 # to_pay = sum(not_paid.mapped('amount_residual'))
                 for record in not_paid:
                     to_pay += record.amount_residual
