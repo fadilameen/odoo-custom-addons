@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from odoo import fields, api
+from odoo import fields
 from odoo import models
-from odoo.api import ValuesType, Self
 
 
 class AccountMove(models.Model):

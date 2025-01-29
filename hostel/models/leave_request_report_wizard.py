@@ -15,40 +15,25 @@ class LeaveRequestReportWizard(models.TransientModel):
     def action_print(self):
         query = """select hs.name,hr.room_number,lr.leave_date,lr.arrival_date ,lr.duration
         from leave_request lr inner join hostel_student hs on lr.student_name=hs.id 
-        inner join hostel_room hr on hs.room_id=hr.id"""
-        where_added = False
+        inner join hostel_room hr on hs.room_id=hr.id WHERE 1=1"""
         print(self.leave_date)
         if self.student_ids:
             ids = tuple(self.student_ids.ids)
             if len(ids) == 1:
-                query += """ WHERE hs.id = %s""" % ids
+                query += """ AND hs.id = %s""" % ids
             else:
-                query += """ WHERE hs.id in %s""" % (ids,)
-            where_added = True
+                query += """ AND hs.id in %s""" % (ids,)
         if self.room_ids:
             ids = tuple(self.room_ids.ids)
             if len(ids) == 1:
-                if where_added:
-                    query += """ AND hr.id = %s""" % ids
-                else:
-                    query += """ WHERE hr.id = %s""" % ids
+                query += """ AND hr.id = %s""" % ids
             else:
-                if where_added:
-                    query += """ AND hr.id in %s""" % (ids,)
-                else:
-                    query += """ WHERE hr.id in %s""" % (ids,)
-            where_added = True
+                query += """ AND hr.id in %s""" % (ids,)
         if self.leave_date:
-            if where_added:
-                query += """ AND lr.leave_date =  '%s'""" % self.leave_date
-            else:
-                query += """ WHERE lr.leave_date =  '%s'""" % self.leave_date
-        where_added = True
+            query += """ AND lr.leave_date =  '%s'""" % self.leave_date
         if self.arrival_date:
-            if where_added:
-                query += """ AND lr.arrival_date =  '%s'""" % self.arrival_date
-            else:
-                query += """ WHERE lr.arrival_date =  '%s'""" % self.arrival_date
+            query += """ AND lr.arrival_date =  '%s'""" % self.arrival_date
+        query += """ORDER BY hs.name,hr.room_number"""
         print(query)
         self.env.cr.execute(query)
         report = self.env.cr.dictfetchall()

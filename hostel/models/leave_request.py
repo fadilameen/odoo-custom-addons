@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 import datetime
-from email.policy import default
-
-from dateutil.utils import today
 
 from odoo import fields, api
 from odoo import models
