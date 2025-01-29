@@ -5,20 +5,27 @@
             <t t-call="web.external_layout">
                 <div class="page">
                     <h2>Leave Request Report</h2>
+                    <t t-set="i" t-value="1"/>
+
                     <table class="table table-sm">
                         <thead>
                             <tr>
-                                <!--                                <th>SL No</th>-->
+                                <th>SL No</th>
                                 <th>Name</th>
                                 <th>Room</th>
                                 <th>Start Date</th>
                                 <th>Arrival Date</th>
+                                <th>Duration</th>
                             </tr>
                         </thead>
                         <tbody>
                             <t t-if="not docs">
                                 <t t-foreach="data" t-as="student">
                                     <tr>
+                                        <td>
+                                            <span t-esc="i"/>
+                                            <t t-set="i" t-value="i+1"/>
+                                        </td>
                                         <td>
                                             <span t-esc="student['name']"/>
                                         </td>
@@ -31,12 +38,19 @@
                                         <td>
                                             <span t-esc="student['arrival_date']"/>
                                         </td>
+                                        <td>
+                                            <span t-esc="student['duration']"/>
+                                        </td>
                                     </tr>
                                 </t>
                             </t>
                             <t t-else="">
                                 <t t-foreach="docs" t-as="student">
                                     <tr>
+                                        <td>
+                                            <span t-esc="i"/>
+                                            <t t-set="i" t-value="i+1"/>
+                                        </td>
                                         <td>
                                             <span t-field="student.student_name"/>
                                         </td>
@@ -48,6 +62,9 @@
                                         </td>
                                         <td>
                                             <span t-field="student.arrival_date"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="student.duration"/>
                                         </td>
                                     </tr>
                                 </t>

@@ -30,6 +30,14 @@ class LeaveRequest(models.Model):
                                  string="Company",
                                  default=lambda
                                      self: self.env.company.id)
+    duration = fields.Integer(default=0, compute='_compute_duration',
+                              store=True)
+
+    @api.depends('leave_date', 'arrival_date')
+    def _compute_duration(self):
+        for leave in self:
+            leave.duration = (
+                    leave.arrival_date - leave.leave_date).days if leave.leave_date and leave.arrival_date else 0
 
     @api.depends('current_date', 'status')
     def compute_leave_state(self):

@@ -55,6 +55,8 @@ class HostelStudent(models.Model):
         compute="compute_invoice_status", store=True
     )
     user_id = fields.Many2one("res.users", readonly=True, string="Related User")
+    pending_amount = fields.Monetary(compute='_compute_pending_amount',
+                                     store=True)
 
     # current_student_status = fields.Selection(
     #     selection=[("absent", "Absent"), ('present', 'Present')])
@@ -62,6 +64,13 @@ class HostelStudent(models.Model):
     # @api.depends("leave_request_ids")
     # def compute_current_student_status(self):
     #     print(self.leave_request_ids)
+
+    @api.depends('invoice_ids.amount_residual')
+    def _compute_pending_amount(self):
+        for record in self:
+            record.pending_amount = sum(record.invoice_ids.filtered(
+                lambda inv: inv.state == "posted" and inv.payment_state in (
+                    "not_paid", "partial")).mapped('amount_residual'))
 
     @api.depends("invoice_ids", "invoice_ids.state")
     def compute_invoice_status(self):

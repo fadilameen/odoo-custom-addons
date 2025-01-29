@@ -13,7 +13,7 @@ class LeaveRequestReportWizard(models.TransientModel):
     arrival_date = fields.Date()
 
     def action_print(self):
-        query = """select hs.name,hr.room_number,lr.leave_date,lr.arrival_date 
+        query = """select hs.name,hr.room_number,lr.leave_date,lr.arrival_date ,lr.duration
         from leave_request lr inner join hostel_student hs on lr.student_name=hs.id 
         inner join hostel_room hr on hs.room_id=hr.id"""
         where_added = False
@@ -37,17 +37,22 @@ class LeaveRequestReportWizard(models.TransientModel):
                     query += """ AND hr.id in %s""" % (ids,)
                 else:
                     query += """ WHERE hr.id in %s""" % (ids,)
-        #     where_added = True
-        # if self.leave_date:
-        #     if where_added:
-        #         query += """ AND hr.id = %s""" % self.leave_date
-        #     else:
-        #         query += """ WHERE hr.id = %s""" % self.leave_date
-        #     where_added = True
+            where_added = True
+        if self.leave_date:
+            if where_added:
+                query += """ AND lr.leave_date =  '%s'""" % self.leave_date
+            else:
+                query += """ WHERE lr.leave_date =  '%s'""" % self.leave_date
+        where_added = True
+        if self.arrival_date:
+            if where_added:
+                query += """ AND lr.arrival_date =  '%s'""" % self.arrival_date
+            else:
+                query += """ WHERE lr.arrival_date =  '%s'""" % self.arrival_date
         print(query)
         self.env.cr.execute(query)
         report = self.env.cr.dictfetchall()
-        print(report)
+        # print(report)
         data = {'report': report}
         if report:
             return self.env.ref(

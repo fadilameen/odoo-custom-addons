@@ -81,6 +81,7 @@
                         </group>
                         <group>
                             <field name="monthly_amount"/>
+                            <field name="pending_amount"/>
                             <field name="invoice_status"
                                    groups="hostel.hostel_warden"/>
                             <field name="partner_id"/>

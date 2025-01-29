@@ -10,9 +10,8 @@ class StudentReportWizard(models.TransientModel):
     room_ids = fields.Many2many("hostel.room")
 
     def action_print(self):
-        query = """select hostel_student.id, hostel_student.name, total_rent, hostel_room.room_number, hostel_student.invoice_status 
-                              from hostel_student 
-                              FULL JOIN hostel_room on hostel_student.room_id = hostel_room.id"""
+        query = """select hostel_student.id, hostel_student.name, total_rent,hostel_student.pending_amount, hostel_room.room_number, hostel_student.invoice_status 
+                   from hostel_student FULL JOIN hostel_room on hostel_student.room_id = hostel_room.id"""
         if self.student_ids or self.room_ids:
             # test = self.student_ids.ids
             # print(tuple(test))
