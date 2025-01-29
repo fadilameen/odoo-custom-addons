@@ -28,7 +28,7 @@ class StudentReportWizard(models.TransientModel):
                     query += """ AND hostel_room.id = %s""" % ids
                 else:
                     query += """ AND hostel_room.id in %s""" % (ids,)
-        query += """ORDER BY hostel_room.room_number, hostel_student.name"""
+        query += """ ORDER BY hostel_room.room_number, hostel_student.name"""
         print(query)
         self.env.cr.execute(query)
         report = self.env.cr.dictfetchall()

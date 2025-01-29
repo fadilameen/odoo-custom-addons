@@ -33,7 +33,7 @@ class LeaveRequestReportWizard(models.TransientModel):
             query += """ AND lr.leave_date =  '%s'""" % self.leave_date
         if self.arrival_date:
             query += """ AND lr.arrival_date =  '%s'""" % self.arrival_date
-        query += """ORDER BY hs.name,hr.room_number"""
+        query += """ ORDER BY hs.name,hr.room_number"""
         print(query)
         self.env.cr.execute(query)
         report = self.env.cr.dictfetchall()
