@@ -5,13 +5,14 @@
         <field name="model">student.report.wizard</field>
         <field name="arch" type="xml">
             <form string="Student Report">
-                <!--                    <p>Click print to generate the student report.</p>-->
                 <group>
                     <field name="student_ids" widget="many2many_tags"/>
                     <field name="room_ids" widget="many2many_tags"/>
                 </group>
                 <footer>
-                    <button name="action_print" string="Print" type="object"
+                    <button name="action_pdf" string="PDF" type="object"
+                            class="btn-primary"/>
+                    <button name="action_xlsx" string="XLSX" type="object"
                             class="btn-primary"/>
                     <button string="Cancel" class="btn-secondary"
                             special="cancel"/>
