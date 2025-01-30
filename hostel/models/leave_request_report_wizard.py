@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
+"""leave request report wizard"""
 from odoo import models, fields
 from odoo.exceptions import ValidationError
 
 
 class LeaveRequestReportWizard(models.TransientModel):
+    """leave request report wizard"""
     _name = "leave.request.report.wizard"
     _description = "Leave Request Report Wizard"
 
@@ -13,10 +15,10 @@ class LeaveRequestReportWizard(models.TransientModel):
     arrival_date = fields.Date()
 
     def action_print(self):
+        """To pass values from wizard to report creation"""
         query = """select hs.name,hr.room_number,lr.leave_date,lr.arrival_date ,lr.duration
         from leave_request lr inner join hostel_student hs on lr.student_name=hs.id 
         inner join hostel_room hr on hs.room_id=hr.id WHERE 1=1"""
-        print(self.leave_date)
         if self.student_ids:
             ids = tuple(self.student_ids.ids)
             if len(ids) == 1:
@@ -34,10 +36,8 @@ class LeaveRequestReportWizard(models.TransientModel):
         if self.arrival_date:
             query += """ AND lr.arrival_date =  '%s'""" % self.arrival_date
         query += """ ORDER BY hs.name,hr.room_number"""
-        print(query)
         self.env.cr.execute(query)
         report = self.env.cr.dictfetchall()
-        # print(report)
         data = {'report': report}
         if report:
             return self.env.ref(

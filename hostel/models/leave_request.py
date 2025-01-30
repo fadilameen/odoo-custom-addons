@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""leave request"""
 import datetime
 
 from odoo import fields, api
@@ -7,6 +8,7 @@ from odoo.tools import date_utils
 
 
 class LeaveRequest(models.Model):
+    """defining structure of leave requests of student"""
     _name = "leave.request"
     _description = "Leave Request"
     _rec_name = "student_name"
@@ -30,8 +32,14 @@ class LeaveRequest(models.Model):
     duration = fields.Integer(default=0, compute='_compute_duration',
                               store=True)
 
+    @api.depends("current_date")
+    def _compute_current_date(self):
+        """to compute current date"""
+        self.current_date = datetime.date.today()
+
     @api.depends('leave_date', 'arrival_date')
     def _compute_duration(self):
+        """to compute duration of leave"""
         for leave in self:
             leave.duration = (
                     leave.arrival_date - leave.leave_date).days if leave.leave_date and leave.arrival_date else 0
@@ -54,8 +62,6 @@ class LeaveRequest(models.Model):
               }])
 
     def action_approve(self):
-        # print(datetime.datetime.now())
-        # print(date_utils.add(datetime.datetime.now(), hours=5))
         """approve action and checking cleaning state"""
         self.status = 'approved'
         if len(self.student_name.room_id.student_ids) == len(
@@ -63,14 +69,9 @@ class LeaveRequest(models.Model):
                     'student_name')):
             if self.student_name.room_id.student_ids.leave_request_ids.filtered(
                     lambda lv: lv.leave_state != 'absent'):
-                print("room not free")
+                pass
             else:
                 self.to_cleaning_state()
-                print("room free")
 
         else:
-            print("room not free")
-
-    @api.depends("current_date")
-    def _compute_current_date(self):
-        self.current_date = datetime.date.today()
+            pass

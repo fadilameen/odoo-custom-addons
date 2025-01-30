@@ -24,11 +24,6 @@
                             string="Approve" class="oe_highlight"
                             invisible="status=='approved'"
                             groups="hostel.hostel_warden"/>
-                    <!--                    <button name="action_cancel" type="object"-->
-                    <!--                            string="Cancel" />-->
-                    <!--                    <button name="test" type="object"-->
-                    <!--                            string="test" class="oe_highlight"/>-->
-
                     <field name="status" widget="statusbar"
                     />
                 </header>
@@ -41,7 +36,6 @@
                         </group>
                         <group>
                             <field name="current_date"/>
-                            <!--                            <field name="leave_state"/>-->
                         </group>
                     </group>
                 </sheet>

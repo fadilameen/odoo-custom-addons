@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""hostel student"""
 
 from dateutil.utils import today
 
@@ -9,12 +10,13 @@ from odoo.tools import date_utils
 
 class HostelStudent(models.Model):
     """Defining structure of students"""
-
     _name = "hostel.student"
     _description = "Hostel Student"
-    # _rec_name = "name"
 
     name = fields.Char(string="Student Name")
+    _sql_constraints = [
+        ('unique_tag', 'unique(name)', ' Student Already Exists'),
+    ]
     partner_id = fields.Many2one("res.partner", readonly=True,
                                  string="Related Partner")
     student_id = fields.Char(string="Student ID",
@@ -39,11 +41,9 @@ class HostelStudent(models.Model):
     invoice_count = fields.Integer(string="Invoices", default=0,
                                    compute='_compute_invoice_count')
     invoice_ids = fields.One2many("account.move", "student_id")
-
     active = fields.Boolean(default=True)
     monthly_amount = fields.Monetary(string="Monthly Amount",
                                      related="room_id.total_rent")
-
     currency_id = fields.Many2one('res.currency', string="Currency",
                                   default=lambda
                                       self: self.env.user.company_id.currency_id,
@@ -52,21 +52,14 @@ class HostelStudent(models.Model):
                                         inverse_name="student_name")
     invoice_status = fields.Selection(
         selection=[('pending', 'Pending'), ('done', 'Done')],
-        compute="compute_invoice_status", store=True
-    )
+        compute="compute_invoice_status", store=True)
     user_id = fields.Many2one("res.users", readonly=True, string="Related User")
     pending_amount = fields.Monetary(compute='_compute_pending_amount',
                                      store=True)
 
-    # current_student_status = fields.Selection(
-    #     selection=[("absent", "Absent"), ('present', 'Present')])
-
-    # @api.depends("leave_request_ids")
-    # def compute_current_student_status(self):
-    #     print(self.leave_request_ids)
-
     @api.depends('invoice_ids.amount_residual')
     def _compute_pending_amount(self):
+        """to compute pending amount"""
         for record in self:
             record.pending_amount = sum(record.invoice_ids.filtered(
                 lambda inv: inv.state == "posted" and inv.payment_state in (
@@ -76,88 +69,21 @@ class HostelStudent(models.Model):
     def compute_invoice_status(self):
         """to compute the status of invoice """
         before_30_days = date_utils.subtract(today(), months=1)
-        # print(before_30_days)
         for record in self:
             invoice = record.invoice_ids.search(
                 [("invoice_date", ">", before_30_days),
                  ("partner_id", "=", record.partner_id.id)
                  ], limit=1)
-
             if invoice:
-                print("done")
                 record.invoice_status = 'done'
             else:
-                print("pending")
                 record.invoice_status = 'pending'
-
-            # for record in self.invoice_ids:
-
-    def action_dummy(self):
-        ()
 
     @api.depends("invoice_ids")
     def _compute_invoice_count(self):
         """to compute the count of invoice related to a student"""
-
         for record in self:
             record.invoice_count = len(record.sudo().invoice_ids)
-
-    @api.constrains('room_id')
-    def _check_room_id(self):
-        """restricting student allocation to room which is already full"""
-        for record in self:
-            if record.room_id.person_count > record.room_id.bed_count:
-                raise ValidationError("No vacant rooms left")
-
-    _sql_constraints = [
-        ('unique_tag', 'unique(name)', ' Student Already Exists'),
-    ]
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        """for generating sequence number for student and create partner when creating student"""
-
-        for val in vals_list:
-            val['student_id'] = self.env["ir.sequence"].next_by_code(
-                "student_sequence_code")
-
-            partner = self.env['res.partner'].create([{
-                'name': val.get('name'),
-                'email': val.get('email'),
-                'street': val.get('street'),
-                'street2': val.get('street2'),
-                'city': val.get('city'),
-                'state_id': val.get('state_id'),
-                'zip': val.get('zip'),
-                'country_id': val.get('country_id')
-            }])
-
-            val['partner_id'] = partner.id
-
-            return super(HostelStudent, self).create(vals_list)
-
-    def action_alot_room(self):
-        """for allotting the student into available rooms"""
-        room_list = self.env['hostel.room'].search(
-            [("state", "not in", ["full", "cleaning"])], limit=1)
-        # print(room_list.id)
-        if room_list.id:
-            self.room_id = room_list.id
-        else:
-            raise ValidationError("No vacant rooms left")
-
-    def action_vacate_room(self):
-        """for removing the student from  rooms"""
-        # print(len(self.room_id.student_ids))
-        room_temp = self.room_id
-        self.room_id = ''
-        # print(room_temp.state, "x1")
-        if len(room_temp.student_ids) == 0:
-            room_temp.state = 'cleaning'
-            # print(room_temp.state, "x2")
-            self.env["cleaning.service"].create(
-                [{'room_id': room_temp.id, }])
-        self.active = False
 
     @api.onchange('date_of_birth')
     def _onchange_date_of_birth(self):
@@ -168,17 +94,31 @@ class HostelStudent(models.Model):
             else:
                 record.age = False
 
-    def action_get_invoice(self):
-        """to display a list of invoice related to a student"""
-        print(self.name)
-        return {
-            "type": "ir.actions.act_window",
-            "name": "Invoices",
-            "res_model": "account.move",
-            'domain': [('student_id', '=', self.name)],
-            "view_mode": "list,form",
+    @api.constrains('room_id')
+    def _check_room_id(self):
+        """restricting student allocation to room which is already full"""
+        for record in self:
+            if record.room_id.person_count > record.room_id.bed_count:
+                raise ValidationError("No vacant rooms left")
 
-        }
+    @api.model_create_multi
+    def create(self, vals_list):
+        """for generating sequence number for student and create partner when creating student"""
+        for val in vals_list:
+            val['student_id'] = self.env["ir.sequence"].next_by_code(
+                "student_sequence_code")
+            partner = self.env['res.partner'].create([{
+                'name': val.get('name'),
+                'email': val.get('email'),
+                'street': val.get('street'),
+                'street2': val.get('street2'),
+                'city': val.get('city'),
+                'state_id': val.get('state_id'),
+                'zip': val.get('zip'),
+                'country_id': val.get('country_id')
+            }])
+            val['partner_id'] = partner.id
+            return super(HostelStudent, self).create(vals_list)
 
     def create_student_user(self):
         """to create a user """
@@ -188,16 +128,36 @@ class HostelStudent(models.Model):
             'partner_id': self.partner_id.id,
             'groups_id': [
                 Command.link(self.env.ref("base.group_user").id),
-                Command.link(self.env.ref("hostel.hostel_student").id)],
-
-        }])
+                Command.link(self.env.ref("hostel.hostel_student").id)]}])
         self.user_id = user.id
 
-    # def create_student_user(self):
-    #     user_vals = {
-    #         'name': self.partner_id.name,
-    #         'login': self.partner_id.name,
-    #         'partner_id': self.partner_id.id,
-    #     }
-    #     user = self.env['res.users'].create(user_vals)
-    #     self.user_id = user.id
+    def action_alot_room(self):
+        """for allotting the student into available rooms"""
+        room_list = self.env['hostel.room'].search(
+            [("state", "not in", ["full", "cleaning"])], limit=1)
+        if room_list.id:
+            self.room_id = room_list.id
+        else:
+            raise ValidationError("No vacant rooms left")
+
+    def action_vacate_room(self):
+        """for removing the student from  rooms"""
+        room_temp = self.room_id
+        self.room_id = ''
+        if len(room_temp.student_ids) == 0:
+            room_temp.state = 'cleaning'
+            self.env["cleaning.service"].create(
+                [{'room_id': room_temp.id, }])
+        self.active = False
+
+    def action_get_invoice(self):
+        """to display a list of invoice related to a student"""
+        return {"type": "ir.actions.act_window",
+                "name": "Invoices",
+                "res_model": "account.move",
+                'domain': [('student_id', '=', self.name)],
+                "view_mode": "list,form", }
+
+    def action_dummy(self):
+        """to remove smart button's action """
+        pass

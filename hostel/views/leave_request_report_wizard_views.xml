@@ -5,7 +5,6 @@
         <field name="model">leave.request.report.wizard</field>
         <field name="arch" type="xml">
             <form string="Leave Request Report">
-                <!--                    <p>Click print to generate the student report.</p>-->
                 <group>
                     <field name="student_ids" widget="many2many_tags"/>
                     <field name="room_ids" widget="many2many_tags"/>

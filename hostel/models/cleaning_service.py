@@ -1,7 +1,11 @@
+# -*- coding: utf-8 -*-
+"""Cleaning Service model of hostel module"""
+
 from odoo import fields, models
 
 
 class CleaningService(models.Model):
+    """defining structure of cleaning service model"""
     _name = "cleaning.service"
     _description = "Cleaning Service"
     _rec_name = "room_id"
@@ -19,7 +23,6 @@ class CleaningService(models.Model):
 
     def action_assign_cleaning_service(self):
         """assign button action to assign current user"""
-        # print(self.env.user.name)
         self.cleaning_staff = self.env.user
         self.state = "assigned"
 

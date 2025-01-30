@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
+"""student report wizard"""
 from odoo import models, fields
 from odoo.exceptions import ValidationError
 
 
 class StudentReportWizard(models.TransientModel):
+    """student report wizard"""
     _name = "student.report.wizard"
     _description = "Student Report Wizard"
 
@@ -11,11 +13,10 @@ class StudentReportWizard(models.TransientModel):
     room_ids = fields.Many2many("hostel.room")
 
     def action_print(self):
+        """To pass values from wizard to report creation"""
         query = """select hostel_student.id, hostel_student.name, total_rent,hostel_student.pending_amount, hostel_room.room_number, hostel_student.invoice_status 
                    from hostel_student FULL JOIN hostel_room on hostel_student.room_id = hostel_room.id WHERE hostel_student.name IS NOT NULL """
         if self.student_ids or self.room_ids:
-            # test = self.student_ids.ids
-            # print(tuple(test))
             if self.student_ids:
                 ids = tuple(self.student_ids.ids)
                 if len(ids) == 1:
@@ -29,10 +30,8 @@ class StudentReportWizard(models.TransientModel):
                 else:
                     query += """ AND hostel_room.id in %s""" % (ids,)
         query += """ ORDER BY hostel_room.room_number, hostel_student.name"""
-        print(query)
         self.env.cr.execute(query)
         report = self.env.cr.dictfetchall()
-        print(report)
         data = {
             'report': report,
         }

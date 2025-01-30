@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <record id="hostel_room_company_restriction_rule" model="ir.rule">
         <field name="name">Company can see only their own room</field>

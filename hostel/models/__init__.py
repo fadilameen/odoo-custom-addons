@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""init file of all models"""
 
 from . import cleaning_service
 from . import hostel_facility
