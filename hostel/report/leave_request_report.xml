@@ -6,6 +6,7 @@
                 <div class="page">
                     <h2>Leave Request Report</h2>
                     <t t-set="i" t-value="1"/>
+
                     <t t-if="not docs and data[0]['name']==data[-1]['name']">
                         <t t-set="single_student" t-value="True"/>
                         <h5>
@@ -13,11 +14,25 @@
                             <span t-esc="data[0]['name']"/>
                         </h5>
                     </t>
-                    <t t-if="docs">
+                    <t t-if="not docs and data[0]['room_number']==data[-1]['room_number'] ">
+                        <t t-set="single_room" t-value="True"/>
+                        <h5>
+                            Room No:
+                            <span t-esc="data[0]['room_number']"/>
+                        </h5>
+                    </t>
+                    <t t-if=" docs and docs[0].student_name==docs[-1].student_name">
                         <t t-set="single_student" t-value="True"/>
                         <h5>
                             Student Name:
-                            <span t-field="docs.student_name"/>
+                            <span t-field="docs[0].student_name"/>
+                        </h5>
+                    </t>
+                    <t t-if="docs and docs[0].student_name.room_id ==docs[-1].student_name.room_id ">
+                        <t t-set="single_room" t-value="True"/>
+                        <h5>
+                            Room No:
+                            <span t-field="docs[0].student_name.room_id"/>
                         </h5>
                     </t>
                     <table class="table table-sm">
@@ -27,7 +42,10 @@
                                 <t t-if="not single_student">
                                     <th>Name</th>
                                 </t>
-                                <th>Room</th>
+                                <t t-if="not single_room">
+
+                                    <th>Room</th>
+                                </t>
                                 <th>Start Date</th>
                                 <th>Arrival Date</th>
                                 <th>Duration</th>
@@ -46,9 +64,11 @@
                                                 <span t-esc="student['name']"/>
                                             </td>
                                         </t>
-                                        <td>
-                                            <span t-esc="student['room_number']"/>
-                                        </td>
+                                        <t t-if="not single_room">
+                                            <td>
+                                                <span t-esc="student['room_number']"/>
+                                            </td>
+                                        </t>
                                         <td>
                                             <span t-esc="student['leave_date']"/>
                                         </td>
@@ -68,12 +88,18 @@
                                             <span t-esc="i"/>
                                             <t t-set="i" t-value="i+1"/>
                                         </td>
-                                        <!--                                        <td>-->
-                                        <!--                                            <span t-field="student.student_name"/>-->
-                                        <!--                                        </td>-->
-                                        <td>
-                                            <span t-field="student.student_name.room_id"/>
-                                        </td>
+                                        <t t-if="not single_student">
+
+                                            <td>
+                                                <span t-field="student.student_name"/>
+                                            </td>
+                                        </t>
+                                        <t t-if="not single_room">
+
+                                            <td>
+                                                <span t-field="student.student_name.room_id"/>
+                                            </td>
+                                        </t>
                                         <td>
                                             <span t-field="student.leave_date"/>
                                         </td>

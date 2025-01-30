@@ -6,25 +6,42 @@
                 <div class="page">
                     <h2>Student Report</h2>
                     <t t-set="i" t-value="1"/>
-                    <t t-if="not docs and data[0]['room_number']==data[-1]['room_number']">
+
+                    <t t-if="not docs and data[0]['id']==data[-1]['id']">
+                        <t t-set="single_student" t-value="True"/>
+                        <h5>
+                            Student Name:
+                            <span t-esc="data[0]['name']"/>
+                        </h5>
+                    </t>
+                    <t t-if="not docs and data[0]['room_number']==data[-1]['room_number'] ">
                         <t t-set="single_room" t-value="True"/>
                         <h5>
                             Room No:
                             <span t-esc="data[0]['room_number']"/>
                         </h5>
                     </t>
-                    <t t-if="docs">
+                    <t t-if=" docs and docs[0].name==docs[-1].name">
+                        <t t-set="single_student" t-value="True"/>
+                        <h5>
+                            Student Name:
+                            <span t-field="docs[0].name"/>
+                        </h5>
+                    </t>
+                    <t t-if="docs and docs[0].room_id ==docs[-1].room_id ">
                         <t t-set="single_room" t-value="True"/>
                         <h5>
                             Room No:
-                            <span t-field="docs.room_id"/>
+                            <span t-field="docs[0].room_id"/>
                         </h5>
                     </t>
                     <table class="table table-sm">
                         <thead>
                             <tr>
                                 <th>SL No</th>
-                                <th>Name</th>
+                                <t t-if="not single_student">
+                                    <th>Name</th>
+                                </t>
                                 <th>Monthly Rent</th>
                                 <th>Pending Amount</th>
                                 <t t-if="not single_room">
@@ -42,9 +59,12 @@
                                             <span t-esc="i"/>
                                             <t t-set="i" t-value="i+1"/>
                                         </td>
-                                        <td>
-                                            <span t-esc="student['name']"/>
-                                        </td>
+                                        <t t-if="not single_student">
+                                            <td>
+                                                <span t-esc="student['name']"/>
+
+                                            </td>
+                                        </t>
                                         <td>
                                             <span t-esc="student['total_rent']"/>
                                         </td>
@@ -52,7 +72,6 @@
                                             <span t-esc="student['pending_amount']"/>
                                         </td>
                                         <t t-if="not single_room">
-
                                             <td>
                                                 <span t-esc="student['room_number']"/>
                                             </td>
@@ -70,20 +89,22 @@
                                             <span t-esc="i"/>
                                             <t t-set="i" t-value="i+1"/>
                                         </td>
-                                        <td>
-                                            <span t-field="student.name"/>
-                                        </td>
+                                        <t t-if="not single_student">
+                                            <td>
+                                                <span t-field="student.name"/>
+                                            </td>
+                                        </t>
                                         <td>
                                             <span t-field="student.monthly_amount"/>
                                         </td>
                                         <td>
                                             <span t-field="student.pending_amount"/>
                                         </td>
-                                        <!--                                        <t t-if="not single_room">-->
-                                        <!--                                            <td>-->
-                                        <!--                                                <span t-field="student.room_id"/>-->
-                                        <!--                                            </td>-->
-                                        <!--                                        </t>-->
+                                        <t t-if="not single_room">
+                                            <td>
+                                                <span t-field="student.room_id"/>
+                                            </td>
+                                        </t>
                                         <td>
                                             <span t-field="student.invoice_status"/>
                                         </td>
