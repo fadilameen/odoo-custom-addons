@@ -32,7 +32,10 @@ The easy to use hostel management system which allows to add students and alloca
         'views/leave_request_report_wizard_views.xml',
         'views/hostel_menu.xml',
 
-    ],
+    ], 'assets': {
+    'web.assets_backend': [
+        'hostel/static/src/js/action_manager.js'
+    ], },
     'demo': [
         'data/hostel_facility_data.xml'],
     'installable': True,

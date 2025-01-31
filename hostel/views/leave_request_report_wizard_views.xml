@@ -12,7 +12,10 @@
                     <field name="arrival_date"/>
                 </group>
                 <footer>
-                    <button name="action_print" string="Print" type="object"
+
+                    <button name="action_pdf" string="PDF" type="object"
+                            class="btn-primary"/>
+                    <button name="action_xlsx" string="XLSX" type="object"
                             class="btn-primary"/>
                     <button string="Cancel" class="btn-secondary"
                             special="cancel"/>
