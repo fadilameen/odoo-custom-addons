@@ -97,12 +97,10 @@ class StudentReportWizard(models.TransientModel):
         current_room = None
         row = 6
         sl_no = 1
-        for i, student in enumerate(data, start=6):
-            # i = i + 1
+        for student in data:
             if not student['room_number']:
                 student['room_number'] = "None"
             if room_grouping and student['room_number'] != current_room:
-                # i = i + 1
                 if row != 6:
                     sheet.merge_range(f'C{row}:N{row}', "")
                     row += 1
