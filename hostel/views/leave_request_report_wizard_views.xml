@@ -10,6 +10,7 @@
                     <field name="room_ids" widget="many2many_tags"/>
                     <field name="leave_date"/>
                     <field name="arrival_date"/>
+                    <field name="student_grouping"/>
                 </group>
                 <footer>
 

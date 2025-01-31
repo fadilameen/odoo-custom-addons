@@ -19,6 +19,8 @@ class LeaveRequestReportWizard(models.TransientModel):
     room_ids = fields.Many2many("hostel.room")
     leave_date = fields.Date()
     arrival_date = fields.Date()
+    student_grouping = fields.Boolean(string="Group by Student in Excel",
+                                      default=False)
 
     def _get_report_data(self):
         """to fetch values from database"""
@@ -59,12 +61,13 @@ class LeaveRequestReportWizard(models.TransientModel):
     def action_xlsx(self):
         """To pass values from wizard to report creation"""
         report = self._get_report_data()
-        data = {'report': report}
+        data = {'report': report,
+                'student_grouping': self.student_grouping}
         if report:
             return {
                 'type': 'ir.actions.report',
                 'data': {'model': 'leave.request.report.wizard',
-                         'options': json.dumps(data['report'],
+                         'options': json.dumps(data,
                                                default=json_default),
                          'output_format': 'xlsx',
                          'report_name': 'Leave Request Report',
@@ -76,6 +79,8 @@ class LeaveRequestReportWizard(models.TransientModel):
 
     def get_xlsx_report(self, data, response):
         """defining the structure of xlsx and values"""
+        student_grouping = data['student_grouping']
+        data = data['report']
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
         sheet = workbook.add_worksheet()
@@ -86,28 +91,31 @@ class LeaveRequestReportWizard(models.TransientModel):
         txt = workbook.add_format({'font_size': '10px', 'align': 'center'})
         sheet.merge_range('F2:K3', 'LEAVE REQUEST REPORT', head)
         sheet.merge_range('C5:D5', 'SL No', cell_format)
-        for i, student in enumerate(data, start=6):
-            sheet.merge_range(f'C{i}:D{i}', i - 5, txt)
-
         sheet.merge_range('E5:F5', 'Name', cell_format)
-        for i, student in enumerate(data, start=6):
-            sheet.merge_range(f'E{i}:F{i}', student['name'], txt)
+        sheet.merge_range('G5:H5', 'Room', cell_format)
+        sheet.merge_range('I5:J5', 'Leave Date', cell_format)
+        sheet.merge_range('K5:L5', 'Arrival Date', cell_format)
+        sheet.merge_range('M5:N5', 'Duration', cell_format)
 
-        sheet.merge_range('G5:H5', 'Monthly Rent', cell_format)
-        for i, student in enumerate(data, start=6):
-            sheet.merge_range(f'G{i}:H{i}', student['room_number'], txt)
+        current_student = None
+        sl_no = 1
+        row = 6
+        for student in data:
+            if student_grouping and current_student != student['name']:
+                if row != 6:
+                    sheet.merge_range(f'C{row}:N{row}', "")
+                    row += 1
+                sheet.write(f'B{row}', student['name'], cell_format)
 
-        sheet.merge_range('I5:J5', 'Pending Amount', cell_format)
-        for i, student in enumerate(data, start=6):
-            sheet.merge_range(f'I{i}:J{i}', student['leave_date'], txt)
-
-        sheet.merge_range('K5:L5', 'Room', cell_format)
-        for i, student in enumerate(data, start=6):
-            sheet.merge_range(f'K{i}:L{i}', student['arrival_date'], txt)
-
-        sheet.merge_range('M5:N5', 'Invoice Status', cell_format)
-        for i, student in enumerate(data, start=6):
-            sheet.merge_range(f'M{i}:N{i}', student['duration'], txt)
+            sheet.merge_range(f'C{row}:D{row}', sl_no, txt)
+            sheet.merge_range(f'E{row}:F{row}', student['name'], txt)
+            sheet.merge_range(f'G{row}:H{row}', student['room_number'], txt)
+            sheet.merge_range(f'I{row}:J{row}', student['leave_date'], txt)
+            sheet.merge_range(f'K{row}:L{row}', student['arrival_date'], txt)
+            sheet.merge_range(f'M{row}:N{row}', student['duration'], txt)
+            current_student = student['name']
+            sl_no += 1
+            row += 1
 
         workbook.close()
         output.seek(0)
