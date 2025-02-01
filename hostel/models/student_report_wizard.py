@@ -15,7 +15,7 @@ class StudentReportWizard(models.TransientModel):
 
     student_ids = fields.Many2many("hostel.student")
     room_ids = fields.Many2many("hostel.room")
-    room_grouping = fields.Boolean(string="Group by Room in Excel",
+    room_grouping = fields.Boolean(string="Group by Room",
                                    default=False)
 
     def _get_report_date(self):
@@ -42,9 +42,8 @@ class StudentReportWizard(models.TransientModel):
     def action_pdf(self):
         """To pass values from wizard to report creation"""
         report = self._get_report_date()
-        data = {
-            'report': report,
-        }
+        data = {'report': report,
+                'room_grouping': self.room_grouping}
         if report:
             return self.env.ref(
                 'hostel.action_report_hostel_student').report_action(
@@ -53,13 +52,11 @@ class StudentReportWizard(models.TransientModel):
             raise ValidationError("No records found!")
 
     def action_xlsx(self):
+
         """To pass values from wizard to report creation"""
         report = self._get_report_date()
-        data = {
-            'report': report,
-            'room_grouping': self.room_grouping
-
-        }
+        data = {'report': report,
+                'room_grouping': self.room_grouping}
         if report:
             return {
                 'type': 'ir.actions.report',
@@ -112,7 +109,9 @@ class StudentReportWizard(models.TransientModel):
             sheet.merge_range(f'I{row}:J{row}', student['pending_amount'], txt)
             sheet.merge_range(f'K{row}:L{row}', student['room_number'], txt)
             sheet.merge_range(f'M{row}:N{row}',
-                              student['invoice_status'].capitalize(), txt)
+                              dict(self.student_ids._fields[
+                                       'invoice_status'].selection).get(
+                                  student['invoice_status']), txt)
             current_room = student['room_number']
             row += 1
             sl_no += 1

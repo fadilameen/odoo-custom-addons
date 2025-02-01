@@ -44,8 +44,7 @@
                                 </t>
                                 <th>Monthly Rent</th>
                                 <th>Pending Amount</th>
-                                <t t-if="not single_room">
-
+                                <t t-if="not single_room and not room_grouping">
                                     <th>Room</th>
                                 </t>
                                 <th>Invoice Status</th>
@@ -53,7 +52,17 @@
                         </thead>
                         <tbody>
                             <t t-if="not docs">
+                                <t t-set="current_room" t-value=""/>
                                 <t t-foreach="data" t-as="student">
+                                    <t t-if=" room_grouping and current_room!=student['room_number']">
+                                        <td colspan="5">
+                                            <t t-if="student['room_number']">
+                                                Room No:
+                                                <span t-esc="student['room_number']"/>
+                                            </t>
+                                            <t t-else="">None</t>
+                                        </td>
+                                    </t>
                                     <tr>
                                         <td>
                                             <span t-esc="i"/>
@@ -62,7 +71,6 @@
                                         <t t-if="not single_student">
                                             <td>
                                                 <span t-esc="student['name']"/>
-
                                             </td>
                                         </t>
                                         <td>
@@ -71,15 +79,19 @@
                                         <td>
                                             <span t-esc="student['pending_amount']"/>
                                         </td>
-                                        <t t-if="not single_room">
+                                        <t t-if="not single_room  and not room_grouping">
                                             <td>
                                                 <span t-esc="student['room_number']"/>
                                             </td>
                                         </t>
                                         <td>
-                                            <span t-esc="student['invoice_status']"/>
+                                            <span t-esc="invoice_status_keys[student['invoice_status']]"/>
+                                            <!--                                            <span t-esc="student['invoice_status']"/>-->
                                         </td>
                                     </tr>
+                                    <t t-set="current_room"
+                                       t-value="student['room_number']"/>
+
                                 </t>
                             </t>
                             <t t-else="">

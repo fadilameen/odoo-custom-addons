@@ -19,7 +19,7 @@ class LeaveRequestReportWizard(models.TransientModel):
     room_ids = fields.Many2many("hostel.room")
     leave_date = fields.Date()
     arrival_date = fields.Date()
-    student_grouping = fields.Boolean(string="Group by Student in Excel",
+    student_grouping = fields.Boolean(string="Group by Student",
                                       default=False)
 
     def _get_report_data(self):
@@ -50,7 +50,7 @@ class LeaveRequestReportWizard(models.TransientModel):
     def action_pdf(self):
         """To pass values from wizard to report creation"""
         report = self._get_report_data()
-        data = {'report': report}
+        data = {'report': report, 'student_grouping': self.student_grouping}
         if report:
             return self.env.ref(
                 'hostel.action_report_leave_request').report_action(

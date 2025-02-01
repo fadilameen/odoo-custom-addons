@@ -42,8 +42,7 @@
                                 <t t-if="not single_student">
                                     <th>Name</th>
                                 </t>
-                                <t t-if="not single_room">
-
+                                <t t-if="not single_room and student_grouping">
                                     <th>Room</th>
                                 </t>
                                 <th>Start Date</th>
@@ -53,13 +52,23 @@
                         </thead>
                         <tbody>
                             <t t-if="not docs">
+                                <t t-set="current_student" t-value=""/>
                                 <t t-foreach="data" t-as="student">
+                                    <t t-if=" student_grouping and current_student!=student['name']">
+                                        <td>
+                                            <t t-if="student['name']">
+                                                Student Name:
+                                                <span t-esc="student['name']"/>
+                                            </t>
+                                            <t t-else="">None</t>
+                                        </td>
+                                    </t>
                                     <tr>
                                         <td>
                                             <span t-esc="i"/>
                                             <t t-set="i" t-value="i+1"/>
                                         </td>
-                                        <t t-if="not single_student">
+                                        <t t-if="not single_student and student_grouping">
                                             <td>
                                                 <span t-esc="student['name']"/>
                                             </td>
@@ -79,6 +88,9 @@
                                             <span t-esc="student['duration']"/>
                                         </td>
                                     </tr>
+                                    <t t-set="current_student"
+                                       t-value="student['name']"/>
+
                                 </t>
                             </t>
                             <t t-else="">

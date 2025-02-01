@@ -13,10 +13,14 @@ class LeaveRequestReport(models.AbstractModel):
         """for getting report values"""
         docs = self.env["leave.request"].browse(docids)
         if data.get('report'):
+            student_grouping = data['student_grouping']
             data = data['report']
+        else:
+            student_grouping = False
         return {
             'doc_ids': docids,
             'doc_model': 'leave.request',
             'docs': docs,
             'data': data,
+            'student_grouping': student_grouping
         }
