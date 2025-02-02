@@ -7,125 +7,161 @@
                     <h2>Leave Request Report</h2>
                     <t t-set="i" t-value="1"/>
 
-                    <t t-if="not docs and data[0]['name']==data[-1]['name']">
+                    <!-- Single Student Detection -->
+                    <t t-if="not docs and data[0]['name'] == data[-1]['name']">
                         <t t-set="single_student" t-value="True"/>
-                        <h5>
-                            Student Name:
+                        <h5>Student Name:
                             <span t-esc="data[0]['name']"/>
                         </h5>
                     </t>
-                    <t t-if="not docs and data[0]['room_number']==data[-1]['room_number'] ">
-                        <t t-set="single_room" t-value="True"/>
-                        <h5>
-                            Room No:
-                            <span t-esc="data[0]['room_number']"/>
-                        </h5>
-                    </t>
-                    <t t-if=" docs and docs[0].student_name==docs[-1].student_name">
+                    <t t-if="docs and docs[0].student_name == docs[-1].student_name">
                         <t t-set="single_student" t-value="True"/>
-                        <h5>
-                            Student Name:
+                        <h5>Student Name:
                             <span t-field="docs[0].student_name"/>
                         </h5>
                     </t>
-                    <t t-if="docs and docs[0].student_name.room_id ==docs[-1].student_name.room_id ">
-                        <t t-set="single_room" t-value="True"/>
-                        <h5>
-                            Room No:
-                            <span t-field="docs[0].student_name.room_id"/>
-                        </h5>
-                    </t>
-                    <table class="table table-sm">
-                        <thead>
-                            <tr>
-                                <th>SL No</th>
-                                <t t-if="not single_student">
-                                    <th>Name</th>
-                                </t>
-                                <t t-if="not single_room and student_grouping">
-                                    <th>Room</th>
-                                </t>
-                                <th>Start Date</th>
-                                <th>Arrival Date</th>
-                                <th>Duration</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <t t-if="not docs">
-                                <t t-set="current_student" t-value=""/>
-                                <t t-foreach="data" t-as="student">
-                                    <t t-if=" student_grouping and current_student!=student['name']">
-                                        <td>
-                                            <t t-if="student['name']">
-                                                Student Name:
-                                                <span t-esc="student['name']"/>
-                                            </t>
-                                            <t t-else="">None</t>
-                                        </td>
-                                    </t>
-                                    <tr>
-                                        <td>
-                                            <span t-esc="i"/>
-                                            <t t-set="i" t-value="i+1"/>
-                                        </td>
-                                        <t t-if="not single_student and student_grouping">
-                                            <td>
-                                                <span t-esc="student['name']"/>
-                                            </td>
-                                        </t>
-                                        <t t-if="not single_room">
-                                            <td>
-                                                <span t-esc="student['room_number']"/>
-                                            </td>
-                                        </t>
-                                        <td>
-                                            <span t-esc="student['leave_date']"/>
-                                        </td>
-                                        <td>
-                                            <span t-esc="student['arrival_date']"/>
-                                        </td>
-                                        <td>
-                                            <span t-esc="student['duration']"/>
-                                        </td>
-                                    </tr>
-                                    <t t-set="current_student"
-                                       t-value="student['name']"/>
 
+                    <!-- Main Report Content -->
+                    <t t-if="not docs">
+                        <t t-if="student_grouping">
+                            <t t-set="current_student" t-value="''"/>
+                            <t t-foreach="data" t-as="leave">
+                                <t t-if="current_student != leave['name']">
+                                    <h5>Student:
+                                        <span t-esc="leave['name'] or 'None'"/>
+                                    </h5>
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>SL No</th>
+                                                <th>Start Date</th>
+                                                <th>Arrival Date</th>
+                                                <th>Duration</th>
+                                                <t t-if="not single_student">
+                                                    <th>Room</th>
+                                                </t>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="data" t-as="student_leave">
+                                                <t t-if="student_leave['name'] == leave['name']">
+                                                    <tr>
+                                                        <td>
+                                                            <span t-esc="i"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-esc="student_leave['leave_date']"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-esc="student_leave['arrival_date']"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-esc="student_leave['duration']"/>
+                                                        </td>
+                                                        <t t-if="not single_student">
+                                                            <td>
+                                                                <span t-esc="student_leave['room_number']"/>
+                                                            </td>
+                                                        </t>
+                                                        <t t-set="i" t-value="i+1"/>
+                                                    </tr>
+                                                </t>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                    <t t-set="current_student" t-value="leave['name']"/>
                                 </t>
                             </t>
-                            <t t-else="">
-                                <t t-foreach="docs" t-as="student">
+                        </t>
+
+                        <t t-if="not student_grouping">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>SL No</th>
+                                        <t t-if="not single_student">
+                                            <th>Name</th>
+                                        </t>
+                                        <th>Start Date</th>
+                                        <th>Arrival Date</th>
+                                        <th>Duration</th>
+                                        <th>Room</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="data" t-as="leave">
+                                        <tr>
+                                            <td>
+                                                <span t-esc="i"/>
+                                            </td>
+                                            <t t-if="not single_student">
+                                                <td>
+                                                    <span t-esc="leave['name']"/>
+                                                </td>
+                                            </t>
+                                            <td>
+                                                <span t-esc="leave['leave_date']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="leave['arrival_date']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="leave['duration']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="leave['room_number']"/>
+                                            </td>
+                                            <t t-set="i" t-value="i+1"/>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+                    </t>
+
+                    <t t-if="docs">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>SL No</th>
+                                    <t t-if="not single_student">
+                                        <th>Name</th>
+                                    </t>
+                                    <th>Start Date</th>
+                                    <th>Arrival Date</th>
+                                    <th>Duration</th>
+                                    <th>Room</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="docs" t-as="leave">
                                     <tr>
                                         <td>
                                             <span t-esc="i"/>
-                                            <t t-set="i" t-value="i+1"/>
                                         </td>
                                         <t t-if="not single_student">
-
                                             <td>
-                                                <span t-field="student.student_name"/>
-                                            </td>
-                                        </t>
-                                        <t t-if="not single_room">
-
-                                            <td>
-                                                <span t-field="student.student_name.room_id"/>
+                                                <span t-field="leave.student_name"/>
                                             </td>
                                         </t>
                                         <td>
-                                            <span t-field="student.leave_date"/>
+                                            <span t-field="leave.leave_date"/>
                                         </td>
                                         <td>
-                                            <span t-field="student.arrival_date"/>
+                                            <span t-field="leave.arrival_date"/>
                                         </td>
                                         <td>
-                                            <span t-field="student.duration"/>
+                                            <span t-field="leave.duration"/>
                                         </td>
+                                        <td>
+                                            <span t-field="leave.student_name.room_id"/>
+                                        </td>
+                                        <t t-set="i" t-value="i+1"/>
                                     </tr>
                                 </t>
-                            </t>
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </t>
                 </div>
             </t>
         </t>

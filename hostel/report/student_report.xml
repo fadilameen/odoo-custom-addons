@@ -14,87 +14,150 @@
                             <span t-esc="data[0]['name']"/>
                         </h5>
                     </t>
-                    <t t-if="not docs and data[0]['room_number']==data[-1]['room_number'] ">
+
+                    <t t-if="not docs and data[0]['room_number']==data[-1]['room_number']">
                         <t t-set="single_room" t-value="True"/>
                         <h5>
                             Room No:
                             <span t-esc="data[0]['room_number']"/>
                         </h5>
                     </t>
-                    <t t-if=" docs and docs[0].name==docs[-1].name">
+
+                    <t t-if="docs and docs[0].name==docs[-1].name">
                         <t t-set="single_student" t-value="True"/>
                         <h5>
                             Student Name:
                             <span t-field="docs[0].name"/>
                         </h5>
                     </t>
-                    <t t-if="docs and docs[0].room_id ==docs[-1].room_id ">
+
+                    <t t-if="docs and docs[0].room_id==docs[-1].room_id">
                         <t t-set="single_room" t-value="True"/>
                         <h5>
                             Room No:
                             <span t-field="docs[0].room_id"/>
                         </h5>
                     </t>
-                    <table class="table table-sm">
-                        <thead>
-                            <tr>
-                                <th>SL No</th>
-                                <t t-if="not single_student">
-                                    <th>Name</th>
-                                </t>
-                                <th>Monthly Rent</th>
-                                <th>Pending Amount</th>
-                                <t t-if="not single_room and not room_grouping">
-                                    <th>Room</th>
-                                </t>
-                                <th>Invoice Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <t t-if="not docs">
-                                <t t-set="current_room" t-value=""/>
-                                <t t-foreach="data" t-as="student">
-                                    <t t-if=" room_grouping and current_room!=student['room_number']">
-                                        <td colspan="5">
-                                            <t t-if="student['room_number']">
-                                                Room No:
-                                                <span t-esc="student['room_number']"/>
-                                            </t>
-                                            <t t-else="">None</t>
-                                        </td>
-                                    </t>
-                                    <tr>
-                                        <td>
-                                            <span t-esc="i"/>
-                                            <t t-set="i" t-value="i+1"/>
-                                        </td>
-                                        <t t-if="not single_student">
-                                            <td>
-                                                <span t-esc="student['name']"/>
-                                            </td>
-                                        </t>
-                                        <td>
-                                            <span t-esc="student['total_rent']"/>
-                                        </td>
-                                        <td>
-                                            <span t-esc="student['pending_amount']"/>
-                                        </td>
-                                        <t t-if="not single_room  and not room_grouping">
-                                            <td>
-                                                <span t-esc="student['room_number']"/>
-                                            </td>
-                                        </t>
-                                        <td>
-                                            <span t-esc="invoice_status_keys[student['invoice_status']]"/>
-                                            <!--                                            <span t-esc="student['invoice_status']"/>-->
-                                        </td>
-                                    </tr>
-                                    <t t-set="current_room"
-                                       t-value="student['room_number']"/>
 
+                    <t t-if="not docs">
+                        <t t-if="room_grouping">
+                            <t t-set="current_room" t-value="''"/>
+                            <t t-foreach="data" t-as="student">
+                                <t t-if="current_room != student['room_number']">
+                                    <h5>
+                                        Room Number:
+                                        <span t-esc="student['room_number'] or 'None'"/>
+                                    </h5>
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>SL No</th>
+                                                <t t-if="not single_student">
+                                                    <th>Name</th>
+                                                </t>
+                                                <th>Monthly Rent</th>
+                                                <th>Pending Amount</th>
+                                                <th>Invoice Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="data" t-as="room_student">
+                                                <t t-if="room_student['room_number'] == student['room_number']">
+                                                    <tr>
+                                                        <td>
+                                                            <span t-esc="i"/>
+                                                            <t t-set="i" t-value="i+1"/>
+                                                        </td>
+                                                        <t t-if="not single_student">
+                                                            <td>
+                                                                <span t-esc="room_student['name']"/>
+                                                            </td>
+                                                        </t>
+                                                        <td>
+                                                            <span t-esc="room_student['total_rent']"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-esc="room_student['pending_amount']"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-esc="invoice_status_keys[room_student['invoice_status']]"/>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                    <t t-set="current_room" t-value="student['room_number']"/>
                                 </t>
                             </t>
-                            <t t-else="">
+                        </t>
+
+                        <t t-if="not room_grouping">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>SL No</th>
+                                        <t t-if="not single_student">
+                                            <th>Name</th>
+                                        </t>
+                                        <th>Monthly Rent</th>
+                                        <th>Pending Amount</th>
+                                        <t t-if="not single_room">
+                                            <th>Room</th>
+                                        </t>
+                                        <th>Invoice Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="data" t-as="student">
+                                        <tr>
+                                            <td>
+                                                <span t-esc="i"/>
+                                                <t t-set="i" t-value="i+1"/>
+                                            </td>
+                                            <t t-if="not single_student">
+                                                <td>
+                                                    <span t-esc="student['name']"/>
+                                                </td>
+                                            </t>
+                                            <td>
+                                                <span t-esc="student['total_rent']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="student['pending_amount']"/>
+                                            </td>
+                                            <t t-if="not single_room">
+                                                <td>
+                                                    <span t-esc="student['room_number']"/>
+                                                </td>
+                                            </t>
+                                            <td>
+                                                <span t-esc="invoice_status_keys[student['invoice_status']]"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+                    </t>
+
+                    <t t-if="docs">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>SL No</th>
+                                    <t t-if="not single_student">
+                                        <th>Name</th>
+                                    </t>
+                                    <th>Monthly Rent</th>
+                                    <th>Pending Amount</th>
+                                    <t t-if="not single_room">
+                                        <th>Room</th>
+                                    </t>
+                                    <th>Invoice Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                                 <t t-foreach="docs" t-as="student">
                                     <tr>
                                         <td>
@@ -122,9 +185,9 @@
                                         </td>
                                     </tr>
                                 </t>
-                            </t>
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </t>
                 </div>
             </t>
         </t>
