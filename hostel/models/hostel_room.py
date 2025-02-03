@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 """hostel room"""
+import datetime
 
 from dateutil.utils import today
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.fields import Datetime
 from odoo.tools import date_utils
 
 
@@ -114,63 +116,48 @@ class HostelRoom(models.Model):
                 'room_sequence_code')
         return super(HostelRoom, self).create(vals)
 
+    def _create_invoice(self, student, rent):
+        """to create invoice"""
+        current_date = Datetime.today()
+        first_day_of_month = current_date.replace(day=1)
+        existing_invoice = self.env['account.move'].search([
+            ("partner_id", "=", student.partner_id.id),
+            ("invoice_date", ">", first_day_of_month),
+            ("state", "!=", "cancel")
+        ], limit=1)
+        print(student.partner_id.id)
+        if existing_invoice:
+            return
+
+        inv = self.env['account.move'].create([{
+            'move_type': 'out_invoice',
+            'partner_id': student.partner_id.id,
+            'student_id': student.id,
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.env.ref("hostel.hostel_rent_product").id,
+                'name': 'Hostel Rent',
+                'quantity': 1,
+                'price_unit': rent,
+            })],
+        }])
+        return inv
+
     def action_monthly_invoice(self):
-        """for generating monthly invoice using button"""
-        if self.student_ids:
-            for record in self.student_ids:
-                before_30_days = date_utils.subtract(today(), months=1)
-                existing_invoice = self.env['account.move'].search(
-                    [("partner_id", "=", record.partner_id.id),
-                     ("invoice_date", ">", before_30_days),
-                     ("state", "!=", "cancel")], limit=1)
-                if existing_invoice:
-                    raise ValidationError(
-                        "Invoice already generated this month")
-                else:
-                    invoice_vals = {
-                        'move_type': 'out_invoice',
-                        'partner_id': record.partner_id.id,
-                        'student_id': record.id,
-                        # 'default_state': 'posted',
-                        # 'amount_total': self.total_rent,
-                        'invoice_line_ids': [
-                            (0, None, {
-                                'product_id': self.env.ref(
-                                    "hostel.hostel_rent_product").id,
-                                'name': 'Hostel Rent',
-                                'quantity': 1,
-                                'price_unit': self.total_rent,
-                            }),
-                        ],
-                    }
-                    self.env['account.move'].create([invoice_vals])
-        else:
-            raise ValidationError("There are no students to invoice")
+        """Generate monthly invoice using button"""
+        invoices_created = []
+        if not self.student_ids:
+            raise ValidationError("No students to invoice")
+        for student in self.student_ids:
+            inv = (self._create_invoice(student, self.total_rent))
+            print(inv)
+            if inv:
+                invoices_created.append(inv)
+        if not invoices_created:
+            raise ValidationError("No students left to invoice this month")
 
     def action_monthly_automatic_invoice(self):
-        """for generating monthly invoice automatically"""
-        rooms_with_students = self.search([("student_ids", '!=', False)])
-        for room in rooms_with_students:
-            for record in room.student_ids:
-                before_30_days = date_utils.subtract(today(), months=1)
-                existing_invoice = room.env['account.move'].search(
-                    [("partner_id", "=", record.partner_id.id),
-                     ("invoice_date", ">", before_30_days),
-                     ("state", "!=", "cancel")], limit=1)
-                if existing_invoice:
-                    continue
-                invoice_vals = {
-                    'move_type': 'out_invoice',
-                    'partner_id': record.partner_id.id,
-                    'student_id': record.id,
-                    'invoice_line_ids': [
-                        (0, None, {
-                            'product_id': self.env.ref(
-                                "hostel.hostel_rent_product").id,
-                            'name': 'Hostel Rent',
-                            'quantity': 1,
-                            'price_unit': room.total_rent,
-                        }),
-                    ],
-                }
-                self.env['account.move'].create([invoice_vals])
+        print(self)
+        """Automatically generate monthly invoices."""
+        for room in self.search([("student_ids", '!=', False)]):
+            for student in room.student_ids:
+                (self._create_invoice(student, room.total_rent))
