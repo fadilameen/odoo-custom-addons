@@ -54,11 +54,18 @@
                                     <t t-if="room_grouping and current_room != student['room_number']">
                                         <tr>
                                             <td colspan="6">
-                                                Room:
-                                                <span t-esc="student['room_number'] or 'None'"/>
+                                                <b>Room No:
+                                                    <t t-if="student['room_number']">
+                                                        <span t-esc="student['room_number'] "/>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <span t-esc="'None'"/>
+                                                    </t>
+                                                </b>
                                             </td>
                                         </tr>
-                                        <t t-set="current_room" t-value="student['room_number']"/>
+                                        <t t-set="current_room"
+                                           t-value="student['room_number']"/>
                                     </t>
                                     <tr>
                                         <td>

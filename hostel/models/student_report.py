@@ -6,6 +6,7 @@ from odoo import models, api
 class StudentReport(models.AbstractModel):
     """student report creation abstract model"""
     _name = 'report.hostel.report_student'
+    _description = "Student Report"
 
     @api.model
     def _get_report_values(self, docids, data=None):

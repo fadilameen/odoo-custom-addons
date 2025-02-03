@@ -42,10 +42,18 @@
                                     <t t-if="student_grouping and current_group != student['name']">
                                         <tr>
                                             <td colspan="6">
-                                                <span t-esc="student['name'] or 'None'"/>
+                                                <b>Student Name:
+                                                    <t t-if="student['name']">
+                                                        <span t-esc="student['name'] "/>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <span t-esc="'None'"/>
+                                                    </t>
+                                                </b>
                                             </td>
                                         </tr>
-                                        <t t-set="current_group" t-value="student['name']"/>
+                                        <t t-set="current_group"
+                                           t-value="student['name']"/>
                                     </t>
                                     <tr>
                                         <td>
@@ -76,16 +84,16 @@
                             </t>
 
                             <t t-else="">
-                                <t t-set="current_group" t-value="''"/>
+                                <!--                                <t t-set="current_group" t-value="''"/>-->
                                 <t t-foreach="docs" t-as="student">
-                                    <t t-if="not single_student and current_group != student.student_name">
-                                        <tr>
-                                            <td colspan="6">
-                                                <span t-field="student.student_name"/>
-                                            </td>
-                                        </tr>
-                                        <t t-set="current_group" t-value="student.student_name"/>
-                                    </t>
+                                    <!--                                    <t t-if="not single_student and current_group != student.student_name">-->
+                                    <!--                                        <tr>-->
+                                    <!--                                            <td colspan="6">-->
+                                    <!--                                                <span t-field="student.student_name"/>-->
+                                    <!--                                            </td>-->
+                                    <!--                                        </tr>-->
+                                    <!--                                        <t t-set="current_group" t-value="student.student_name"/>-->
+                                    <!--                                    </t>-->
                                     <tr>
                                         <td>
                                             <span t-esc="i"/>

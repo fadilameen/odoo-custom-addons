@@ -7,6 +7,7 @@ from odoo import models, api
 class LeaveRequestReport(models.AbstractModel):
     """abstract model of leave request report"""
     _name = 'report.hostel.report_leave_request'
+    _description = "Leave Request Report"
 
     @api.model
     def _get_report_values(self, docids, data=None):
