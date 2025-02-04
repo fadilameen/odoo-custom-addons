@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
 """hostel room"""
-import datetime
-
-from dateutil.utils import today
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.fields import Datetime
-from odoo.tools import date_utils
 
 
 class HostelRoom(models.Model):
@@ -21,8 +17,7 @@ class HostelRoom(models.Model):
                               default=lambda self: _('New'),
                               readonly=True, string="Room Number")
     _sql_constraints = [
-        ('unique_tag', 'unique(room_number)', 'Same Room Already Exists'),
-    ]
+        ('unique_tag', 'unique(room_number)', 'Same Room Already Exists')]
     room_type = fields.Selection(selection=[('ac', 'AC'),
                                             ('non_ac', 'Non AC')],
                                  tracking=True, default='non_ac', required=True)

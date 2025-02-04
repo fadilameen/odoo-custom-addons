@@ -1,91 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="online_hostel_form">
+    <template id="online_hostel_form" name="Room Booking">
         <t t-call="website.layout">
-            <div id="wrap" class="oe_structure oe_empty">
-                <section class="s_website_form" data-vcss="001"
-                         data-snippet="s_website_form">
-                    <div class="container">
-                        <form action="/hostel/submit"
-                              enctype="multipart/form-data"
-                              class="o_mark_required" data-mark="*"
-                              data-model_name="" data-success-page="">
-                            <input type="hidden" name="csrf_token"
-                                   t-att-value="request.csrf_token()"/>
-                            <div class="s_website_form_rows row s_col_no_bgcolor">
-                                <div class="form-group col-12 s_website_form_field s_website_form_required"
-                                     data-type="char" data-name="Field">
-                                    <div class="row s_col_no_resize s_col_no_bgcolor">
-                                        <label class="col-form-label col-sm-auto s_website_form_label"
-                                               style="width: 200px"
-                                               for="studio1">
-                                            <span class="s_website_form_label_content">
-                                                Name
-                                            </span>
-                                            <span class="s_website_form_mark">
-                                                *
-                                            </span>
-                                        </label>
-                                        <div class="col-sm">
-                                            <input id="name" type="text"
-                                                   class="form-control s_website_form_input"
-                                                   name="name" required="1"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--                                <div class="form-group col-12 s_website_form_field s_website_form_required"-->
-                                <!--                                     data-type="char" data-name="Field">-->
-                                <!--                                    <div class="row s_col_no_resize s_col_no_bgcolor">-->
-                                <!--                                        <label class="col-form-label col-sm-auto s_website_form_label"-->
-                                <!--                                               style="width: 200px"-->
-                                <!--                                               for="studio1">-->
-                                <!--                                            <span class="s_website_form_label_content">-->
-                                <!--                                                Phone-->
-                                <!--                                            </span>-->
-                                <!--                                            <span class="s_website_form_mark">-->
-                                <!--                                                *-->
-                                <!--                                            </span>-->
-                                <!--                                        </label>-->
-                                <!--                                        <div class="col-sm">-->
-                                <!--                                            <input id="phone" type="text"-->
-                                <!--                                                   class="form-control s_website_form_input"-->
-                                <!--                                                   name="phone" required="1"/>-->
-                                <!--                                        </div>-->
-                                <!--                                    </div>-->
-                                <!--                                </div>-->
-                                <div class="form-group col-12 s_website_form_field s_website_form_required"
-                                     data-type="char" data-name="Field">
-                                    <div class="row s_col_no_resize s_col_no_bgcolor">
-                                        <label class="col-form-label col-sm-auto s_website_form_label"
-                                               style="width: 200px"
-                                               for="studio1">
-                                            <span class="s_website_form_label_content">
-                                                Email
-                                            </span>
-                                            <span class="s_website_form_mark">
-                                                *
-                                            </span>
-                                        </label>
-                                        <div class="col-sm">
-                                            <input id="email" type="email"
-                                                   class="form-control s_website_form_input"
-                                                   name="email" required="1"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group col-12 s_website_form_submit"
-                                     data-name="Submit Button">
-                                    <div style="width: 200px;"
-                                         class="s_website_form_label"/>
-                                    <button type="submit"
-                                            class="btn btn-primary">Submit
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-
+            <div class="container">
+                <form action="/hostel/submit" method="post" class="mt-4">
+                    <input type="hidden" name="csrf_token"
+                           t-att-value="request.csrf_token()"/>
+                    <!--                    <h5>-->
+                    <!--                        <t t-esc="rooms"/>-->
+                    <!--                        <t t-foreach="rooms" t-as="room">-->
+                    <!--                            <option>-->
+                    <!--                                <span t-esc="room.room_number"/>-->
+                    <!--                                <span t-esc="room.id"/>-->
+                    <!--                            </option>-->
+                    <!--                        </t>-->
+                    <!--                    </h5>-->
+                    <div class="form-group mb-3">
+                        <label for="name" class="form-label">Name *</label>
+                        <input type="text"
+                               class="form-control"
+                               id="name"
+                               name="name"
+                               required="required"/>
                     </div>
-                </section>
+
+                    <div class="form-group mb-3">
+                        <label for="email" class="form-label">Email *</label>
+                        <input type="email"
+                               class="form-control"
+                               id="email"
+                               name="email"
+                               required="required"/>
+                    </div>
+
+
+                    <div class="form-group col-12">
+                        <label for="room">Room</label>
+                        <select class="form-control" name="room"
+                                required="required">
+                            <!--                            <option value="default">Select Room</option>-->
+                            <t t-foreach="rooms" t-as="room">
+                                <option t-att-value="room.id">
+                                    <span t-esc="room.room_number"/>
+                                </option>
+                            </t>
+                        </select>
+                    </div>
+                    <br/>
+                    <br/>
+                    <t t-if="not rooms">
+                        <h6 style="color: red;">Sorry, No Rooms Available.
+                            Please Check Back Later.
+                        </h6>
+
+                    </t>
+                    <div class="form-group mb-3">
+                        <button type="submit" class="btn btn-primary">Submit
+                        </button>
+                    </div>
+                </form>
             </div>
         </t>
     </template>
