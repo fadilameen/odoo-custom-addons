@@ -48,8 +48,8 @@ class LeaveRequest(models.Model):
     def compute_leave_state(self):
         """for computing the current presence of student in room"""
         for record in self:
-            if record.leave_date and record.arrival_date:
-                record.leave_state = 'absent' if record.leave_date <= record.current_date <= record.arrival_date and record.status == 'approved' else 'present'
+            if record.leave_date <= record.current_date <= record.arrival_date and record.status == 'approved':
+                record.leave_state = 'absent'
             else:
                 record.leave_state = 'present'
 
@@ -67,11 +67,6 @@ class LeaveRequest(models.Model):
         if len(self.student_id.room_id.student_ids) == len(
                 self.student_id.room_id.student_ids.leave_request_ids.mapped(
                     'student_id')):
-            if self.student_id.room_id.student_ids.leave_request_ids.filtered(
+            if not self.student_id.room_id.student_ids.leave_request_ids.filtered(
                     lambda lv: lv.leave_state != 'absent'):
-                pass
-            else:
                 self.to_cleaning_state()
-
-        else:
-            pass

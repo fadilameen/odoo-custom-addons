@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.fields import Datetime
+from odoo.fields import Datetime, Command
 
 
 class HostelRoom(models.Model):
@@ -15,7 +15,7 @@ class HostelRoom(models.Model):
 
     room_number = fields.Char(copy=False, index=True,
                               default=lambda self: _('New'),
-                              readonly=True, string="Room Number")
+                              readonly=True, string="Room Number", tracking=True)
     _sql_constraints = [
         ('unique_tag', 'unique(room_number)', 'Same Room Already Exists')]
     room_type = fields.Selection(selection=[('ac', 'AC'),
@@ -40,7 +40,7 @@ class HostelRoom(models.Model):
                                         ('cleaning', 'Cleaning')],
                              compute='compute_current_state', store=True)
     student_ids = fields.One2many("hostel.student",
-                                  "room_id")
+                                  "room_id", tracking=True)
     person_count = fields.Integer(compute='_compute_person_count', )
 
     facility_ids = fields.Many2many("hostel.facility", string="Facilities")
@@ -51,26 +51,14 @@ class HostelRoom(models.Model):
     @api.depends('student_ids')
     def compute_pending_amount(self):
         """to compute pending amount in each room"""
-        if self.student_ids:
-            to_pay = 0
-            for student in self.student_ids:
-                not_paid = student.invoice_ids.filtered(
-                    lambda inv: inv.state == "posted" and inv.payment_state in (
-                        "not_paid", "partial"))
-                for record in not_paid:
-                    to_pay += record.amount_residual
-            self.pending_amount = to_pay
-        else:
-            self.pending_amount = 0
+        self.pending_amount = sum(self.student_ids.invoice_ids.filtered(
+            lambda inv: inv.state == "posted" and inv.payment_state in (
+                "not_paid", "partial")).mapped('amount_residual')) if self.student_ids else 0
 
     @api.depends('rent', 'facility_ids')
     def _compute_total_rent(self):
         """for calculating total rent"""
-        for record in self:
-            facilities_total = 0
-            for facility in record.facility_ids:
-                facilities_total += facility.charge
-            record.total_rent = record.rent + facilities_total
+        self.total_rent = sum(self.facility_ids.mapped('charge')) + self.rent
 
     @api.depends('bed_count')
     def _compute_bed_count_string(self):
@@ -89,19 +77,18 @@ class HostelRoom(models.Model):
     @api.depends('person_count', 'bed_count', "student_ids", "cleaning_ids")
     def compute_current_state(self):
         """for changing the state of room according to count of students per room"""
-        cln = self.cleaning_ids.filtered(lambda cln: cln.state != "done")
-        for record in self:
-            if record.bed_count == 0:
-                record.write({'state': 'full'})
-            elif record.person_count:
-                if record.person_count >= record.bed_count:
-                    record.write({'state': 'full'})
-                else:
-                    record.write({'state': 'partial'})
+        for room in self:
+            if room.cleaning_ids.filtered(lambda cln: cln.state != "done"):
+                self.state = 'cleaning'
+                continue
+            if room.bed_count == 0:
+                self.state = 'full'
+            elif room.person_count == 0:
+                self.state = 'empty'
+            elif room.person_count >= room.bed_count:
+                self.state = 'full'
             else:
-                record.write({'state': 'empty'})
-        if cln:
-            self.state = 'cleaning'
+                self.state = 'partial'
 
     @api.model_create_multi
     def create(self, vals):
@@ -111,48 +98,41 @@ class HostelRoom(models.Model):
                 'room_sequence_code')
         return super(HostelRoom, self).create(vals)
 
-    def _create_invoice(self, student, rent):
+    def _create_invoice(self, rent):
         """to create invoice"""
         current_date = Datetime.today()
         first_day_of_month = current_date.replace(day=1)
-        existing_invoice = self.env['account.move'].search([
-            ("partner_id", "=", student.partner_id.id),
-            ("invoice_date", ">", first_day_of_month),
-            ("state", "!=", "cancel")
-        ], limit=1)
-        print(student.partner_id.id)
-        if existing_invoice:
-            return
-
-        inv = self.env['account.move'].create([{
-            'move_type': 'out_invoice',
-            'partner_id': student.partner_id.id,
-            'student_id': student.id,
-            'invoice_line_ids': [(0, 0, {
-                'product_id': self.env.ref("hostel.hostel_rent_product").id,
-                'name': 'Hostel Rent',
-                'quantity': 1,
-                'price_unit': rent,
-            })],
-        }])
-        return inv
+        invoices_created = []
+        for student in self.student_ids:
+            existing_invoice = self.env['account.move'].search([
+                ("partner_id", "=", student.partner_id.id),
+                ("invoice_date", ">=", first_day_of_month),
+                ("state", "!=", "cancel")
+            ], limit=1)
+            if existing_invoice:
+                continue
+            inv = self.env['account.move'].create([{
+                'move_type': 'out_invoice',
+                'partner_id': student.partner_id.id,
+                'student_id': student.id,
+                'invoice_line_ids': [
+                    Command.create({
+                        'product_id': self.env.ref("hostel.hostel_rent_product").id,
+                        'name': 'Hostel Rent',
+                        'quantity': 1,
+                        'price_unit': rent,
+                    })],
+            }])
+            if inv:
+                invoices_created.append(inv)
+        return invoices_created
 
     def action_monthly_invoice(self):
         """Generate monthly invoice using button"""
-        invoices_created = []
-        if not self.student_ids:
-            raise ValidationError("No students to invoice")
-        for student in self.student_ids:
-            inv = (self._create_invoice(student, self.total_rent))
-            print(inv)
-            if inv:
-                invoices_created.append(inv)
-        if not invoices_created:
+        if not self._create_invoice(self.total_rent):
             raise ValidationError("No students left to invoice this month")
 
     def action_monthly_automatic_invoice(self):
-        print(self)
         """Automatically generate monthly invoices."""
         for room in self.search([("student_ids", '!=', False)]):
-            for student in room.student_ids:
-                (self._create_invoice(student, room.total_rent))
+            room._create_invoice(room.total_rent)

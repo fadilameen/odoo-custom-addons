@@ -11,6 +11,8 @@
                 <field name="leave_date"/>
                 <field name="arrival_date"/>
                 <field name="status"/>
+                <field name="leave_state"/>
+
             </list>
         </field>
     </record>
@@ -36,6 +38,7 @@
                         </group>
                         <group>
                             <field name="current_date"/>
+                            <field name="leave_state"/>
                         </group>
                     </group>
                 </sheet>

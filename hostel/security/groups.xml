@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
+        <record model="ir.module.category" id="module_category_human_resources_hostel">
+            <field name="name">Hostel</field>
+            <field name="sequence">45</field>
+        </record>
         <record model="res.groups" id="hostel_student">
             <field name="name">Student</field>
             <field name="category_id"
-                   ref="base.module_category_human_resources_hostel"/>
+                   ref="hostel.module_category_human_resources_hostel"/>
         </record>
         <record model="res.groups" id="hostel_staff">
             <field name="name">Cleaning Staff</field>
             <field name="category_id"
-                   ref="base.module_category_human_resources_hostel"/>
+                   ref="hostel.module_category_human_resources_hostel"/>
         </record>
 
         <record model="res.groups" id="hostel_warden">
             <field name="name">Warden</field>
             <field name="category_id"
-                   ref="base.module_category_human_resources_hostel"/>
+                   ref="hostel.module_category_human_resources_hostel"/>
             <field name="users"
                    eval="[(Command.link(ref('base.user_root'))),
                           (Command.link(ref('base.user_admin')))]"/>
