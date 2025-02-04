@@ -6,7 +6,7 @@
         <field name="model">leave.request</field>
         <field name="arch" type="xml">
             <list string="test">
-                <field name="student_name"/>
+                <field name="student_id"/>
 
                 <field name="leave_date"/>
                 <field name="arrival_date"/>
@@ -30,7 +30,7 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="student_name"/>
+                            <field name="student_id"/>
                             <field name="leave_date"/>
                             <field name="arrival_date"/>
                         </group>

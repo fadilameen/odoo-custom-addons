@@ -43,7 +43,7 @@ class HostelRoom(models.Model):
                                   "room_id")
     person_count = fields.Integer(compute='_compute_person_count', )
 
-    facility_id = fields.Many2many("hostel.facility", string="Facilities")
+    facility_ids = fields.Many2many("hostel.facility", string="Facilities")
     total_rent = fields.Monetary(compute="_compute_total_rent", store=True)
     pending_amount = fields.Monetary(compute="compute_pending_amount")
     cleaning_ids = fields.One2many('cleaning.service', "room_id")
@@ -63,12 +63,12 @@ class HostelRoom(models.Model):
         else:
             self.pending_amount = 0
 
-    @api.depends('rent', 'facility_id')
+    @api.depends('rent', 'facility_ids')
     def _compute_total_rent(self):
         """for calculating total rent"""
         for record in self:
             facilities_total = 0
-            for facility in record.facility_id:
+            for facility in record.facility_ids:
                 facilities_total += facility.charge
             record.total_rent = record.rent + facilities_total
 

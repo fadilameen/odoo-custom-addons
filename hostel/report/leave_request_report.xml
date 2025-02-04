@@ -13,10 +13,10 @@
                             <span t-esc="data[0]['name']"/>
                         </h5>
                     </t>
-                    <t t-if="docs and docs[0].student_name == docs[-1].student_name">
+                    <t t-if="docs and docs[0].student_id == docs[-1].student_id">
                         <t t-set="single_student" t-value="True"/>
                         <h5>Student Name:
-                            <span t-field="docs[0].student_name"/>
+                            <span t-field="docs[0].student_id"/>
                         </h5>
                     </t>
 
@@ -84,28 +84,19 @@
                             </t>
 
                             <t t-else="">
-                                <!--                                <t t-set="current_group" t-value="''"/>-->
                                 <t t-foreach="docs" t-as="student">
-                                    <!--                                    <t t-if="not single_student and current_group != student.student_name">-->
-                                    <!--                                        <tr>-->
-                                    <!--                                            <td colspan="6">-->
-                                    <!--                                                <span t-field="student.student_name"/>-->
-                                    <!--                                            </td>-->
-                                    <!--                                        </tr>-->
-                                    <!--                                        <t t-set="current_group" t-value="student.student_name"/>-->
-                                    <!--                                    </t>-->
                                     <tr>
                                         <td>
                                             <span t-esc="i"/>
                                         </td>
                                         <t t-if="not single_student">
                                             <td>
-                                                <span t-field="student.student_name"/>
+                                                <span t-field="student.student_id"/>
                                             </td>
                                         </t>
                                         <t t-if="not single_room">
                                             <td>
-                                                <span t-field="student.student_name.room_id"/>
+                                                <span t-field="student.student_id.room_id"/>
                                             </td>
                                         </t>
                                         <td>

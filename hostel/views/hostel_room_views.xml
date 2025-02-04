@@ -30,19 +30,16 @@
                             string="Monthly Invoice"
                             type="object" groups="hostel.hostel_warden"
                             class="oe_highlight"/>
-                    <!--                    <button name="print_partner" string="test"-->
-                    <!--                            type="object"/>-->
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
                     <group>
                         <group>
-                            <!--                            <field name="rname"/>-->
                             <field name="room_number"/>
                             <field name="room_type"/>
                             <field name="bed_count"/>
                             <field name="company_id"/>
-                            <field name="facility_id"
+                            <field name="facility_ids"
                                    widget="many2many_tags"/>
                         </group>
                         <group>

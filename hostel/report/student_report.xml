@@ -19,18 +19,6 @@
                             <span t-esc="data[0]['room_number']"/>
                         </h5>
                     </t>
-                    <!--                    <t t-if="docs and docs[0].name == docs[-1].name">-->
-                    <!--                        <t t-set="single_student" t-value="True"/>-->
-                    <!--                        <h5>Student Name:-->
-                    <!--                            <span t-field="docs[0].name"/>-->
-                    <!--                        </h5>-->
-                    <!--                    </t>-->
-                    <!--                    <t t-if="docs and docs[0].room_id == docs[-1].room_id">-->
-                    <!--                        <t t-set="single_room" t-value="True"/>-->
-                    <!--                        <h5>Room No:-->
-                    <!--                            <span t-field="docs[0].room_id"/>-->
-                    <!--                        </h5>-->
-                    <!--                    </t>-->
 
                     <table class="table table-sm">
                         <thead>
@@ -96,17 +84,8 @@
                             </t>
 
                             <t t-else="">
-                                <!--                                <t t-set="current_room" t-value="''"/>-->
                                 <t t-foreach="docs" t-as="student">
-                                    <!--                                    <t t-if="not single_room and current_room != student.room_id">-->
-                                    <!--                                        <tr>-->
-                                    <!--                                            <td colspan="6">-->
-                                    <!--                                                Room:-->
-                                    <!--                                                <span t-field="student.room_id"/>-->
-                                    <!--                                            </td>-->
-                                    <!--                                        </tr>-->
-                                    <!--                                        <t t-set="current_room" t-value="student.room_id"/>-->
-                                    <!--                                    </t>-->
+
                                     <tr>
                                         <td>
                                             <span t-esc="i"/>

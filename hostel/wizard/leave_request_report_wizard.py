@@ -25,20 +25,20 @@ class LeaveRequestReportWizard(models.TransientModel):
     def _get_report_data(self):
         """to fetch values from database"""
         query = """select hs.name,hr.room_number,lr.leave_date,lr.arrival_date ,lr.duration
-               from leave_request lr inner join hostel_student hs on lr.student_name=hs.id 
+               from leave_request lr inner join hostel_student hs on lr.student_id=hs.id 
                inner join hostel_room hr on hs.room_id=hr.id WHERE 1=1"""
         if self.student_ids:
-            ids = tuple(self.student_ids.ids)
-            if len(ids) == 1:
-                query += """ AND hs.id = %s""" % ids
+            s_ids = tuple(self.student_ids.ids)
+            if len(s_ids) == 1:
+                query += """ AND hs.id = %s""" % s_ids
             else:
-                query += """ AND hs.id in %s""" % (ids,)
+                query += """ AND hs.id in %s""" % (s_ids,)
         if self.room_ids:
-            ids = tuple(self.room_ids.ids)
-            if len(ids) == 1:
-                query += """ AND hr.id = %s""" % ids
+            r_ids = tuple(self.room_ids.ids)
+            if len(r_ids) == 1:
+                query += """ AND hr.id = %s""" % r_ids
             else:
-                query += """ AND hr.id in %s""" % (ids,)
+                query += """ AND hr.id in %s""" % (r_ids,)
         if self.leave_date:
             query += """ AND lr.leave_date =  '%s'""" % self.leave_date
         if self.arrival_date:

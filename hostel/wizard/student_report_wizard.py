@@ -2,7 +2,9 @@
 """student report wizard"""
 import io
 import json
+
 import xlsxwriter
+
 from odoo import models, fields
 from odoo.exceptions import ValidationError
 from odoo.tools import json_default
@@ -24,17 +26,17 @@ class StudentReportWizard(models.TransientModel):
                                 from hostel_student FULL JOIN hostel_room on hostel_student.room_id = hostel_room.id WHERE hostel_student.name IS NOT NULL """
         if self.student_ids or self.room_ids:
             if self.student_ids:
-                ids = tuple(self.student_ids.ids)
-                if len(ids) == 1:
-                    query += """ AND hostel_student.id = %s""" % ids
+                s_ids = tuple(self.student_ids.ids)
+                if len(s_ids) == 1:
+                    query += """ AND hostel_student.id = %s""" % s_ids
                 else:
-                    query += """ AND hostel_student.id in %s""" % (ids,)
+                    query += """ AND hostel_student.id in %s""" % (s_ids,)
             if self.room_ids:
-                ids = tuple(self.room_ids.ids)
-                if len(ids) == 1:
-                    query += """ AND hostel_room.id = %s""" % ids
+                r_ids = tuple(self.room_ids.ids)
+                if len(r_ids) == 1:
+                    query += """ AND hostel_room.id = %s""" % r_ids
                 else:
-                    query += """ AND hostel_room.id in %s""" % (ids,)
+                    query += """ AND hostel_room.id in %s""" % (r_ids,)
         query += """ ORDER BY hostel_room.room_number, hostel_student.name"""
         self.env.cr.execute(query)
         return self.env.cr.dictfetchall()

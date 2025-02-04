@@ -6,15 +6,6 @@
                 <form action="/hostel/submit" method="post" class="mt-4">
                     <input type="hidden" name="csrf_token"
                            t-att-value="request.csrf_token()"/>
-                    <!--                    <h5>-->
-                    <!--                        <t t-esc="rooms"/>-->
-                    <!--                        <t t-foreach="rooms" t-as="room">-->
-                    <!--                            <option>-->
-                    <!--                                <span t-esc="room.room_number"/>-->
-                    <!--                                <span t-esc="room.id"/>-->
-                    <!--                            </option>-->
-                    <!--                        </t>-->
-                    <!--                    </h5>-->
                     <div class="form-group mb-3">
                         <label for="name" class="form-label">Name *</label>
                         <input type="text"
@@ -38,7 +29,6 @@
                         <label for="room">Room</label>
                         <select class="form-control" name="room"
                                 required="required">
-                            <!--                            <option value="default">Select Room</option>-->
                             <t t-foreach="rooms" t-as="room">
                                 <option t-att-value="room.id">
                                     <span t-esc="room.room_number"/>

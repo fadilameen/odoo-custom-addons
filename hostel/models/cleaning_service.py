@@ -12,7 +12,7 @@ class CleaningService(models.Model):
 
     room_id = fields.Many2one("hostel.room", required=True, ondelete='cascade')
     start_time = fields.Datetime(string="Start Time")
-    cleaning_staff = fields.Many2one("res.users")
+    cleaning_staff_id = fields.Many2one("res.users")
     state = fields.Selection(
         selection=[('new', 'New'), ('assigned', 'Assigned'), ('done', 'Done')],
         default='new')
@@ -23,7 +23,7 @@ class CleaningService(models.Model):
 
     def action_assign_cleaning_service(self):
         """assign button action to assign current user"""
-        self.cleaning_staff = self.env.user
+        self.cleaning_staff_id = self.env.user.id
         self.state = "assigned"
 
     def action_complete(self):

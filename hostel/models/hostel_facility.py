@@ -8,7 +8,6 @@ class HostelFacilities(models.Model):
     """Defining hostel facilities"""
     _name = "hostel.facility"
     _description = "Facility"
-    _rec_name = "name"
 
     name = fields.Char(required=True)
     charge = fields.Monetary(string="Charge")

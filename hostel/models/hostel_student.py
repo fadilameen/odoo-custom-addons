@@ -14,9 +14,6 @@ class HostelStudent(models.Model):
     _description = "Hostel Student"
 
     name = fields.Char(string="Student Name")
-    _sql_constraints = [
-        ('unique_tag', 'unique(name)', ' Student Already Exists'),
-    ]
     partner_id = fields.Many2one("res.partner", readonly=True,
                                  string="Related Partner")
     student_id = fields.Char(string="Student ID",
@@ -49,7 +46,7 @@ class HostelStudent(models.Model):
                                       self: self.env.user.company_id.currency_id,
                                   readonly=False)
     leave_request_ids = fields.One2many("leave.request",
-                                        inverse_name="student_name")
+                                        inverse_name="student_id")
     invoice_status = fields.Selection(
         selection=[('pending', 'Pending'), ('done', 'Done')],
         compute="compute_invoice_status", store=True)
@@ -64,6 +61,11 @@ class HostelStudent(models.Model):
             record.pending_amount = sum(record.invoice_ids.filtered(
                 lambda inv: inv.state == "posted" and inv.payment_state in (
                     "not_paid", "partial")).mapped('amount_residual'))
+
+    """sql constraint for unique name"""
+    _sql_constraints = [
+        ('unique_tag', 'unique(name)', ' Student Already Exists'),
+    ]
 
     @api.depends("invoice_ids", "invoice_ids.state")
     def compute_invoice_status(self):

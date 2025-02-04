@@ -82,7 +82,7 @@
         <field ref="hostel.model_leave_request" name="model_id"/>
         <field name="groups"
                eval="[Command.link(ref('hostel.hostel_student'))]"/>
-        <field name="domain_force">[("student_name.user_id", "=",user.id)]
+        <field name="domain_force">[("student_id.user_id", "=",user.id)]
         </field>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="True"/>
@@ -94,7 +94,7 @@
         <field ref="hostel.model_cleaning_service" name="model_id"/>
         <field name="groups"
                eval="[Command.link(ref('hostel.hostel_staff'))]"/>
-        <field name="domain_force">[('cleaning_staff', 'in', [user.id,False])]
+        <field name="domain_force">[('cleaning_staff_id', 'in', [user.id,False])]
         </field>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="False"/>

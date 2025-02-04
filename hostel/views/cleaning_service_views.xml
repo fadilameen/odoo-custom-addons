@@ -23,7 +23,7 @@
                         <field name="room_id"
                                groups="hostel.hostel_warden,hostel.hostel_student"/>
                         <field name="start_time"/>
-                        <field name="cleaning_staff"/>
+                        <field name="cleaning_staff_id"/>
                         <field name="company_id"/>
                     </group>
                 </sheet>
@@ -38,7 +38,7 @@
 
                 <field name="room_id"/>
                 <field name="start_time"/>
-                <field name="cleaning_staff"/>
+                <field name="cleaning_staff_id"/>
                 <field name="state"/>
 
             </list>

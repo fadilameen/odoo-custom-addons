@@ -19,9 +19,6 @@
             <field name="users"
                    eval="[(Command.link(ref('base.user_root'))),
                           (Command.link(ref('base.user_admin')))]"/>
-            <!--            (Command.link(ref('base.group_user')))-->
-            <!--                        <field name="implied_ids"-->
-            <!--                               eval="[Command.link(ref('hostel.hostel_student')),Command.link(ref('hostel.hostel_staff'))]"/>-->
         </record>
     </data>
 </odoo>

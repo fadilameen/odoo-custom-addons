@@ -11,9 +11,9 @@ class LeaveRequest(models.Model):
     """defining structure of leave requests of student"""
     _name = "leave.request"
     _description = "Leave Request"
-    _rec_name = "student_name"
+    _rec_name = "student_id"
 
-    student_name = fields.Many2one("hostel.student", ondelete='cascade')
+    student_id = fields.Many2one("hostel.student", ondelete='cascade')
     leave_date = fields.Date(string="Leave Date", required=True)
     arrival_date = fields.Date(string="Arrival Date", required=True)
     status = fields.Selection(copy=False,
@@ -55,19 +55,19 @@ class LeaveRequest(models.Model):
 
     def to_cleaning_state(self):
         """to approve the leave request"""
-        self.student_name.room_id.state = 'cleaning'
+        self.student_id.room_id.state = 'cleaning'
         self.env["cleaning.service"].create(
-            [{'room_id': self.student_name.room_id.id,
+            [{'room_id': self.student_id.room_id.id,
               'start_time': date_utils.add(datetime.datetime.now(), hours=1)
               }])
 
     def action_approve(self):
         """approve action and checking cleaning state"""
         self.status = 'approved'
-        if len(self.student_name.room_id.student_ids) == len(
-                self.student_name.room_id.student_ids.leave_request_ids.mapped(
-                    'student_name')):
-            if self.student_name.room_id.student_ids.leave_request_ids.filtered(
+        if len(self.student_id.room_id.student_ids) == len(
+                self.student_id.room_id.student_ids.leave_request_ids.mapped(
+                    'student_id')):
+            if self.student_id.room_id.student_ids.leave_request_ids.filtered(
                     lambda lv: lv.leave_state != 'absent'):
                 pass
             else:
