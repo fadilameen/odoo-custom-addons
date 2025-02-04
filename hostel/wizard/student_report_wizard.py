@@ -3,9 +3,9 @@
 import io
 import json
 import xlsxwriter
-from odoo.tools import date_utils, json_default
 from odoo import models, fields
 from odoo.exceptions import ValidationError
+from odoo.tools import json_default
 
 
 class StudentReportWizard(models.TransientModel):
