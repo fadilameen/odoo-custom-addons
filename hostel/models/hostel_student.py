@@ -73,7 +73,8 @@ class HostelStudent(models.Model):
         before_30_days = date_utils.subtract(today(), months=1)
         for record in self:
             record.invoice_status = 'done' if record.invoice_ids.search(
-                [("invoice_date", ">=", before_30_days), ("partner_id", "=", record.partner_id.id)],
+                [("invoice_date", ">=", before_30_days),
+                 ("partner_id", "=", record.partner_id.id)],
                 limit=1) else 'pending'
 
     @api.depends("invoice_ids")
@@ -86,13 +87,14 @@ class HostelStudent(models.Model):
     def _onchange_date_of_birth(self):
         """for calculating age"""
         for record in self:
-            record.age = (today() - record.date_of_birth).days / 365 if record.date_of_birth else False
+            if record.date_of_birth:
+                record.age = (today() - record.date_of_birth).days / 365
 
     @api.constrains('room_id')
     def _check_room_id(self):
         """restricting student allocation to room which is already full"""
         for record in self:
-            if record.room_id.person_count >= record.room_id.bed_count:
+            if record.room_id.person_count > record.room_id.bed_count:
                 raise ValidationError("No vacant rooms left")
 
     @api.model_create_multi

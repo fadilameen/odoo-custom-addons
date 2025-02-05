@@ -2,3 +2,4 @@
 
 from . import hostel
 from . import main
+from . import snippet

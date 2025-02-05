@@ -15,7 +15,7 @@ class HostelRoom(models.Model):
 
     room_number = fields.Char(copy=False, index=True,
                               default=lambda self: _('New'),
-                              readonly=True, string="Room Number", tracking=True)
+                              readonly=True, tracking=True)
     _sql_constraints = [
         ('unique_tag', 'unique(room_number)', 'Same Room Already Exists')]
     room_type = fields.Selection(selection=[('ac', 'AC'),
@@ -24,7 +24,6 @@ class HostelRoom(models.Model):
     bed_count = fields.Integer(required=True, tracking=True)
     bed_count_string = fields.Char(compute="_compute_bed_count_string",
                                    store=True)
-
     rent = fields.Monetary(tracking=True, default=100)
     company_id = fields.Many2one('res.company', copy=False,
                                  string="Company",
@@ -32,8 +31,7 @@ class HostelRoom(models.Model):
                                      self: self.env.company.id)
     currency_id = fields.Many2one('res.currency', string="Currency",
                                   related='company_id.currency_id',
-                                  readonly=False,
-                                  )
+                                  readonly=False)
     state = fields.Selection(selection=[('empty', 'Empty'),
                                         ('partial', 'Partial'),
                                         ('full', 'Full'),
@@ -42,7 +40,6 @@ class HostelRoom(models.Model):
     student_ids = fields.One2many("hostel.student",
                                   "room_id", tracking=True)
     person_count = fields.Integer(compute='_compute_person_count', )
-
     facility_ids = fields.Many2many("hostel.facility", string="Facilities")
     total_rent = fields.Monetary(compute="_compute_total_rent", store=True)
     pending_amount = fields.Monetary(compute="compute_pending_amount")
@@ -53,7 +50,8 @@ class HostelRoom(models.Model):
         """to compute pending amount in each room"""
         self.pending_amount = sum(self.student_ids.invoice_ids.filtered(
             lambda inv: inv.state == "posted" and inv.payment_state in (
-                "not_paid", "partial")).mapped('amount_residual')) if self.student_ids else 0
+                "not_paid", "partial")).mapped(
+            'amount_residual')) if self.student_ids else 0
 
     @api.depends('rent', 'facility_ids')
     def _compute_total_rent(self):
@@ -117,7 +115,8 @@ class HostelRoom(models.Model):
                 'student_id': student.id,
                 'invoice_line_ids': [
                     Command.create({
-                        'product_id': self.env.ref("hostel.hostel_rent_product").id,
+                        'product_id': self.env.ref(
+                            "hostel.hostel_rent_product").id,
                         'name': 'Hostel Rent',
                         'quantity': 1,
                         'price_unit': rent,

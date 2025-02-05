@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="room_snippet" name="room snippet">
+        <Section Class="index_snippet">
+            <div class="snippet">
+                <h1>
+                    Rooms
+                </h1>
+            </div>
+        </Section>
+    </template>
+    <template id="website_hostel_room" inherit_id="website.snippets"
+              name="Snippet Blog">
+
+        <!--        <xpath expr="//t[@id='blog_posts_hook']" position="after">-->
+        <!--                <xpath expr="//snippets[@id='snippet_structure']" position="inside">-->
+
+        <xpath expr="//t[@id='installed_snippets_hook']"
+               position="after">
+            <t t-snippet="hostel.room_snippet" string="Rooms"/>
+        </xpath>
+    </template>
+</odoo>
