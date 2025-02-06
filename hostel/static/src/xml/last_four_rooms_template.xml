@@ -1,0 +1,11 @@
+<templates id="best_seller_template" xml:space="preserve">
+   <t t-name="hostel.last_four_rooms">
+       <div id="last_four_rooms" class="container">
+           <div>
+               <t t-foreach="rooms" t-as="room" t-key="x">
+                   <h6><t t-esc="room.room_number"/></h6>
+               </t>
+           </div>
+       </div>
+   </t>
+</templates>

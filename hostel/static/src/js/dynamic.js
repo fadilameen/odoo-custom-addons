@@ -1,35 +1,26 @@
 /** @odoo-module */
 import PublicWidget from "@web/legacy/js/public/public_widget";
-import { jsonrpc } from "@web/core/network/rpc_service";
+import { rpc } from "@web/core/network/rpc";
 import { renderToElement } from "@web/core/utils/render";
-export function _chunk(array, size) {
-    const result = [];
-    for (let i = 0; i < array.length; i += size) {
-        result.push(array.slice(i, i + size));
-    }
-    return result;
-}
-var TopSellingProducts = PublicWidget.Widget.extend({
-        selector: '.best_seller_product_snippet',
+var last_four_rooms = PublicWidget.Widget.extend({
+        selector: '.last_four_rooms_snippet',
         willStart: async function () {
-            const data = await jsonrpc('/last_four_rooms', {})
-            const [products, categories, website_id, unique_id] = data
+            const data = await rpc('/last_four_rooms', {})
+            const rooms = data
             Object.assign(this, {
-                products, categories, website_id, unique_id
+                rooms
             })
         },
         start: function () {
-            const refEl = this.$el.find("#top_products_carousel")
-            const { products, categories, current_website_id, products_list} = this
-            const chunkData = chunk(products, 4)
-            refEl.html(renderToElement(module_name.products_category_wise', {
-                products,
-                categories,
-                current_website_id,
-                products_list,
-                chunkData
-            }))
+
+            const refEl = this.$el.find("#last_four")
+            const rooms = this.rooms
+            const x=refEl.html(renderToElement('hostel.last_four_rooms', {rooms}))
+//            console.log(,"xxx")
         }
     });
-PublicWidget.registry.products_category_wise_snippet = TopSellingProducts;
-return TopSellingProducts;
+PublicWidget.registry.last_four_rooms_snippet = last_four_rooms;
+return last_four_rooms;
+
+
+

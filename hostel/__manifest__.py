@@ -35,13 +35,14 @@ The easy to use hostel management system which allows to add students and alloca
         'views/online_hostel_form.xml',
         'views/hostel_website_menu.xml',
         'views/hostel_menu.xml',
-
     ],
     'assets': {
         'web.assets_backend': [
             'hostel/static/src/js/action_manager.js'],
-        # 'web.assets_frontend': [
-        #     'hostel/static/src/js/dynamic.js'],
+        'web.assets_frontend': [
+            'hostel/static/src/js/dynamic.js',
+            'hostel/static/src/xml/last_four_rooms_template.xml'
+        ],
     },
     'demo': [
         'data/hostel_facility_data.xml'],
