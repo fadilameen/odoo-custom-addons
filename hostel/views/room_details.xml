@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="room_details" name="Room Detail">
+        <t t-call="website.layout">
+            <div class="container">
+                <div class="oe_structure"/>
+                <br/>
+                <div class="row">
+                    <div class="col-6 overflow-hidden rounded">
+                        <span t-field="room.image"
+                              t-options="{'widget': 'image'}"/>
+                    </div>
+                    <div class="col-6 overflow-hidden rounded">
+
+                        <h3 t-field="room.room_number"/>
+                        <p>Room Type:
+                            <span t-field="room.room_type"/>
+                        </p>
+
+                        <p>Current Status:
+                            <span t-field="room.state"/>
+                        </p>
+                        <p>Bed Count:
+                            <span t-field="room.bed_count"/>
+                        </p>
+                        <p>Facilities:
+                            <span t-field="room.facility_ids"/>
+                        </p>
+                        <p>Room Rent:
+                            <span t-field="room.rent"/>
+                        </p>
+                        <p>Total Rent:
+                            <span t-field="room.total_rent"/>
+                            <span t-field="room.currency_id"/>
+                        </p>
+                    </div>
+
+                    <!--                    <div class="col">-->
+                    <!--                        <div class="card" style="width: 60rem;">-->
+                    <!--                            <div class="col-12">-->
+                    <!--                                &lt;!&ndash;                            <p t-esc="room.read()"/>&ndash;&gt;-->
+                    <!--                                <div class="room_details">-->
+                    <!--                                    <div class="col-6  overflow-hidden rounded">-->
+                    <!--                                        <span t-field="room.image"-->
+                    <!--                                              t-options="{'widget': 'image'}"/>-->
+                    <!--                                    </div>-->
+                    <!--                                    <h3 t-field="room.room_number"/>-->
+                    <!--                                    <p>Room Type:-->
+                    <!--                                        <span t-field="room.room_type"/>-->
+                    <!--                                    </p>-->
+                    <!--                                    <p>Room Rent:-->
+                    <!--                                        <span t-field="room.rent"/>-->
+                    <!--                                    </p>-->
+                    <!--                                    <p>Current Status:-->
+                    <!--                                        <span t-field="room.state"/>-->
+                    <!--                                    </p>-->
+                    <!--                                    <p>Bed Count:-->
+                    <!--                                        <span t-field="room.bed_count"/>-->
+                    <!--                                    </p>-->
+                    <!--                                    <p>Facilities:-->
+                    <!--                                        <span t-field="room.facility_ids"/>-->
+                    <!--                                    </p>-->
+                    <!--                                    <p>Total Rent:-->
+                    <!--                                        <span t-field="room.total_rent"/>-->
+                    <!--                                        <span t-field="room.currency_id"/>-->
+                    <!--                                    </p>-->
+                    <!--                                </div>-->
+                    <!--                            </div>-->
+
+                    <!--                        </div>-->
+                    <!--                    </div>-->
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -44,6 +44,7 @@ class HostelRoom(models.Model):
     total_rent = fields.Monetary(compute="_compute_total_rent", store=True)
     pending_amount = fields.Monetary(compute="compute_pending_amount")
     cleaning_ids = fields.One2many('cleaning.service', "room_id")
+    image = fields.Image()
 
     @api.depends('student_ids')
     def compute_pending_amount(self):

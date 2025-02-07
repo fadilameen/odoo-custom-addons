@@ -16,7 +16,7 @@ var last_four_rooms = PublicWidget.Widget.extend({
             const refEl = this.$el.find("#last_four")
             const rooms = this.rooms
             const x=refEl.html(renderToElement('hostel.last_four_rooms', {rooms}))
-//            console.log(,"xxx")
+//            console.log({rooms},"xxx")
         }
     });
 PublicWidget.registry.last_four_rooms_snippet = last_four_rooms;

@@ -1,9 +1,26 @@
 <templates id="best_seller_template" xml:space="preserve">
    <t t-name="hostel.last_four_rooms">
        <div id="last_four_rooms" class="container">
-           <div>
-               <t t-foreach="rooms" t-as="room" t-key="x">
-                   <h6><t t-esc="room.room_number"/></h6>
+           <div class="row row-cols-1 row-cols-md-4 g-4">
+               <t t-foreach="rooms[0]" t-as="room" t-key="x">
+                     <div class="col">
+                         <div class="card" style="width: 18rem;">
+                            <div class="card-body">
+                                  <div class="col-6">
+                                        <div class="overflow-hidden rounded">
+                                                     <img class="card-img-top o_img_product_square o_img_product_cover h-auto"
+                                                          t-attf-src="data:image/jpeg;base64,{{room.image}}"/>
+                                        </div>
+                            </div>
+                                <h5 class="card-title"><t t-esc="room.room_number"/></h5>
+                                <h6 class="card-text"><t t-esc="rooms[1][room.room_type]"/></h6>
+                                <p class="card-text">Space left: <t
+                                        t-esc="room.bed_count-room.person_count"/></p>
+                                <a t-attf-href="/store/#{room.id}"
+                                   class="btn btn-primary">Click Here</a>
+                            </div>
+                         </div>
+                   </div>
                </t>
            </div>
        </div>

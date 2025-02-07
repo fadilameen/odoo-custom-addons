@@ -3,7 +3,9 @@
 
     <template id="last_four_rooms_template" name="Dynamic Room Snippet">
         <Section Class="last_four_rooms_snippet">
-            <h2>Rooms</h2>
+            <!--            <h2>Rooms</h2>-->
+            <br/>
+            <br/>
             <div id="last_four"/>
         </Section>
     </template>
@@ -15,7 +17,8 @@
         <!--                <xpath expr="//snippets[@id='snippet_structure']" position="inside">-->
         <xpath expr="//t[@id='installed_snippets_hook']"
                position="after">
-            <t t-snippet="hostel.last_four_rooms_template" string="Rooms"/>
+            <t t-snippet="hostel.last_four_rooms_template" string="Rooms"
+               t-thumbnail="/hostel/static/src/img/snippet_image.jpg"/>
         </xpath>
     </template>
 </odoo>
