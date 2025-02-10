@@ -1,28 +1,55 @@
 <templates id="best_seller_template" xml:space="preserve">
-   <t t-name="hostel.last_four_rooms">
-       <div id="last_four_rooms" class="container">
-           <div class="row row-cols-1 row-cols-md-4 g-4">
-               <t t-foreach="rooms[0]" t-as="room" t-key="x">
-                     <div class="col">
-                         <div class="card" style="width: 18rem;">
-                            <div class="card-body">
-                                  <div class="col-6">
-                                        <div class="overflow-hidden rounded">
-                                                     <img class="card-img-top o_img_product_square o_img_product_cover h-auto"
-                                                          t-attf-src="data:image/jpeg;base64,{{room.image}}"/>
+    <t t-name="hostel.last_four_rooms">
+        <div id="last_four_rooms" class="container">
+            <div id="carouselExampleControls" class="carousel slide"
+                 name="carousel" data-bs-ride="carousel"
+                 t-att-data-bs-interval="interval">
+                <div class="carousel-inner" role="listbox">
+                    <t t-foreach="chunks" t-as="chunk" t-key="x">
+                        <div class="carousel-item-active">
+                            <div t-att-class="chunk.is_active ? 'carousel-item active' : 'carousel-item'">
+                                <div class="row">
+                                    <t t-foreach="chunk" t-as="room" t-key="y">
+                                        <div class="col">
+                                            <div class="card bg-info"
+                                                 style="width: 18rem;">
+                                                <div class="card-body">
+                                                    <div class="col-6">
+                                                        <div class="overflow-hidden rounded">
+                                                            <img class="card-img-top o_img_product_square o_img_product_cover h-auto"
+                                                                 t-attf-src="data:image/jpeg;base64,{{room.image}}"/>
+                                                        </div>
+                                                    </div>
+                                                    <h5 class="card-title"><t t-esc="room.room_number"/></h5>
+                                                    <h6 class="card-text"><t t-esc="room.room_type"/></h6>
+                                                    <p class="card-text">Space left: <t
+                                                            t-esc="room.bed_count-room.person_count"/></p>
+                                                    <a t-attf-href="/store/#{room.id}"
+                                                       class="btn btn-primary">Click Here</a>
+                                                </div>
+                                            </div>
                                         </div>
+                                    </t>
+                                </div>
                             </div>
-                                <h5 class="card-title"><t t-esc="room.room_number"/></h5>
-                                <h6 class="card-text"><t t-esc="rooms[1][room.room_type]"/></h6>
-                                <p class="card-text">Space left: <t
-                                        t-esc="room.bed_count-room.person_count"/></p>
-                                <a t-attf-href="/store/#{room.id}"
-                                   class="btn btn-primary">Click Here</a>
-                            </div>
-                         </div>
-                   </div>
-               </t>
-           </div>
-       </div>
-   </t>
+                        </div>
+                    </t>
+                </div>
+                <a class="carousel-control-prev bg-danger"
+                   href="#carouselExampleControls" role="button"
+                   data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"
+                          aria-hidden="true"/>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next bg-danger"
+                   href="#carouselExampleControls" role="button"
+                   data-bs-slide="next">
+                    <span class="carousel-control-next-icon"
+                          aria-hidden="true"/>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+    </t>
 </templates>

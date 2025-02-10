@@ -14,18 +14,17 @@ class DynamicSnippets(http.Controller):
                                                                'bed_count',
                                                                'person_count',
                                                                'image'],
-                                                              order='id desc',
-                                                              limit=4)
+                                                              order='id desc')
         room_type = dict(
             request.env['hostel.room']._fields['room_type'].selection)
-        print(rooms, room_type)
-        return rooms, room_type
+        # print(rooms, room_type)
+        return rooms
 
     @http.route('/store/<model("hostel.room"):room>', type='http', auth="user",
                 website=True)
     def room_details(self, room):
         values = {
-            'room': room,
+            'room': room
         }
         # print(room.read())
         return request.render('hostel.room_details', values)
