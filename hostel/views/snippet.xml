@@ -3,9 +3,6 @@
 
     <template id="last_four_rooms_template" name="Dynamic Room Snippet">
         <Section Class="last_four_rooms_snippet">
-            <!--            <h2>Rooms</h2>-->
-            <br/>
-            <br/>
             <div id="last_four"/>
         </Section>
     </template>

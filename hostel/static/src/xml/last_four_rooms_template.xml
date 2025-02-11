@@ -5,6 +5,7 @@
                  name="carousel" data-bs-ride="carousel"
                  t-att-data-bs-interval="interval">
                 <div class="carousel-inner" role="listbox">
+                    <t t-if="chunks">
                     <t t-foreach="chunks" t-as="chunk" t-key="x">
                         <div class="carousel-item-active">
                             <div t-att-class="chunk.is_active ? 'carousel-item active' : 'carousel-item'">
@@ -14,12 +15,17 @@
                                             <div class="card "
                                                  style="width: 18rem;">
                                                 <div class="card-body">
-                                                    <div class="col-6">
-                                                        <div class="overflow-hidden rounded">
+<!--                                                    <div class="col-6">-->
+                                                    <div class="overflow-hidden rounded">
+                                                        <t t-if="room.image">
                                                             <img class="card-img-top o_img_product_square o_img_product_cover h-auto"
-                                                                 t-attf-src="data:image/jpeg;base64,{{room.image}}"/>
+                                                                 t-attf-src="data:image/jpeg;base64,{{room.image}}"/></t>
+                                                        <t t-else="">
+                                                             <img class="card-img-top o_img_product_square o_img_product_cover h-auto"
+                                                                  src="/hostel/static/src/img/no_image_icon.png"/>
+                                                        </t>
                                                         </div>
-                                                    </div>
+                                                    <!--                                                    </div>-->
                                                     <h5 class="card-title"><t t-esc="room.room_number"/></h5>
                                                     <p class="card-text">Space left: <t
                                                             t-esc="room.bed_count-room.person_count"/></p>
@@ -33,25 +39,29 @@
                             </div>
                         </div>
                     </t>
+                    </t>
+                    <t t-else="">
+                        <span>No Rooms</span>
+                    </t>
                 </div>
-                <a class="carousel-control-prev  position-absolute top-50 translate-middle-y rounded-circle d-flex align-items-center justify-content-center"
-                   style="left: -25px; width: 40px; height: 40px;"
-                   href="#carouselExampleControls"
-                   role="button"
-                   data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon"
-                          aria-hidden="true"/>
-                    <span class="visually-hidden">Previous</span>
-                </a>
-                <a class="carousel-control-next  position-absolute top-50 translate-middle-y rounded-circle d-flex align-items-center justify-content-center"
-                   style="right: -25px; width: 40px; height: 40px;"
-                   href="#carouselExampleControls"
-                   role="button"
-                   data-bs-slide="next">
-                    <span class="carousel-control-next-icon"
-                          aria-hidden="true"/>
-                    <span class="visually-hidden">Next</span>
-                </a>
+                <div class="o_carousel_controllers">
+                     <a t-attf-href="#carouselExampleControls"
+                        class="carousel-control-prev position-md-absolute w-auto"
+                        data-bs-slide="prev" role="button" aria-label="Previous"
+                        title="Previous">
+                                <span class="oi oi-chevron-left ms-md-n4 rounded-pill p-3 bg-700"/>
+                         <span class="visually-hidden">Previous</span>
+                     </a>
+                    <a t-attf-href="#carouselExampleControls"
+                       class="carousel-control-next position-md-absolute w-auto"
+                       data-bs-slide="next" role="button" aria-label="Next"
+                       title="Next">
+                        <span class="oi oi-chevron-right me-md-n4 rounded-pill p-3 bg-700"/>
+                        <span class="visually-hidden">Next</span>
+                    </a>
+
+
+                </div>
 
             </div>
         </div>
