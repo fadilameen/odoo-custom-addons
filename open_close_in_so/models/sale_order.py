@@ -11,7 +11,7 @@ class SaleOrder(models.Model):
                                      selection=[('open', 'Open'),
                                                 ('close', 'Close')],
                                      compute='_compute_current_state',
-                                     required=True, store=True)
+                                     store=True)
 
     @api.depends("delivery_status")
     def _compute_current_state(self):

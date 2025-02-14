@@ -16,6 +16,7 @@ class ResConfigSettings(models.TransientModel):
                                        domain=[('bom_ids', '!=', False)])
 
     def set_values(self):
+        """to set values into settings"""
         super().set_values()
         self.env['ir.config_parameter'].set_param(
             'bom_in_cart.enable_bom_in_cart', self.enable_bom_in_cart)
@@ -24,6 +25,7 @@ class ResConfigSettings(models.TransientModel):
 
     @api.model
     def get_values(self):
+        """to get values from settings"""
         res = super().get_values()
         params = self.env['ir.config_parameter'].sudo()
         bom_product_ids = params.get_param('bom_in_cart.bom_product_ids')

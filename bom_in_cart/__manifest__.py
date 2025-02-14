@@ -9,13 +9,11 @@ Bill of Materials in Cart
 ====================
 To display bill of materials in website cart.
 """,
-    # 'category': 'Sales',
-    # 'website': '',
+    'category': 'Website',
     'depends': ['website_sale', 'mrp'],
     'data': [
         'views/res_config_settings_views.xml',
         'views/website_sale_cart_views.xml',
-        #          'security/ir.model.access.csv',
     ],
     'installable': True,
     'application': "False",

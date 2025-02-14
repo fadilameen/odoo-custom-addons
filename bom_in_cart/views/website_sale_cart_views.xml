@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <template id="suggested_productsbnm_list"
+    <template id="bom_of_products_in_cart"
               inherit_id="website_sale.cart_lines"
-              name="Accessory Products in my cart">
+              name="BOM of Products in Cart">
         <xpath expr="//div[@name='o_wsale_cart_line_button_container']"
                position="before">
-            <h5>Hello World!</h5>
+            <t t-if="line.product_id.id in bom_product_ids">
+                <t t-foreach="line.product_id.bom_ids.bom_line_ids.product_id"
+                   t-as="product">
+                    <h6>
+                        <t t-esc="product.display_name"/>
+                    </h6>
+                </t>
+            </t>
         </xpath>
     </template>
-
 </odoo>

@@ -3,53 +3,64 @@
     <template id="online_hostel_form" name="Room Booking">
         <t t-call="website.layout">
             <div class="container">
-                <form action="/hostel/submit" method="post" class="mt-4">
-                    <input type="hidden" name="csrf_token"
-                           t-att-value="request.csrf_token()"/>
-                    <div class="form-group mb-3">
-                        <label for="name" class="form-label">Name *</label>
-                        <input type="text"
-                               class="form-control"
-                               id="name"
-                               name="name"
-                               required="required"/>
-                    </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <form action="/hostel/submit" method="post"
+                              class="mt-4">
+                            <input type="hidden" name="csrf_token"
+                                   t-att-value="request.csrf_token()"/>
+                            <div class="form-group mb-3">
+                                <label for="name" class="form-label">Name *
+                                </label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="name"
+                                       name="name"
+                                       required="required"/>
+                            </div>
 
-                    <div class="form-group mb-3">
-                        <label for="email" class="form-label">Email *</label>
-                        <input type="email"
-                               class="form-control"
-                               id="email"
-                               name="email"
-                               required="required"/>
-                    </div>
+                            <div class="form-group mb-3">
+                                <label for="email" class="form-label">Email *
+                                </label>
+                                <input type="email"
+                                       class="form-control"
+                                       id="email"
+                                       name="email"
+                                       required="required"/>
+                            </div>
 
 
-                    <div class="form-group mb-3">
-                        <label for="room" class="form-label">Room *</label>
-                        <select class="form-control" name="room"
-                                required="required">
-                            <t t-foreach="rooms" t-as="room">
-                                <option t-att-value="room.id">
-                                    <span t-esc="room.room_number"/>
-                                </option>
+                            <div class="form-group mb-3">
+                                <label for="room" class="form-label">Room *
+                                </label>
+                                <select class="form-control" name="room"
+                                        required="required">
+                                    <t t-foreach="rooms" t-as="room">
+                                        <option t-att-value="room.id">
+                                            <span t-esc="room.room_number"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+                            <br/>
+                            <br/>
+                            <t t-if="not rooms">
+                                <h6 style="color: red;">Sorry, No Rooms
+                                    Available.
+                                    Please Check Back Later.
+                                </h6>
+
                             </t>
-                        </select>
+                            <div class="form-group mb-3">
+                                <button type="submit" class="btn btn-primary">
+                                    Submit
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                    <br/>
-                    <br/>
-                    <t t-if="not rooms">
-                        <h6 style="color: red;">Sorry, No Rooms Available.
-                            Please Check Back Later.
-                        </h6>
-
-                    </t>
-                    <div class="form-group mb-3">
-                        <button type="submit" class="btn btn-primary">Submit
-                        </button>
-                    </div>
-                </form>
+                </div>
             </div>
+
         </t>
     </template>
 </odoo>
