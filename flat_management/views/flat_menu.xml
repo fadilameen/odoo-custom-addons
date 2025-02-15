@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <menuitem id="root_menu" name="Flat Management"/>
+    <menuitem id="flat_flat__menu" action="flat_action"
+              parent="root_menu"/>
+    <menuitem id="flat_management_menu" action="flat_management_action"
+              parent="root_menu"/>
+</odoo>
