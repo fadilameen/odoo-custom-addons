@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_pos_settings_form" model="ir.ui.view">
+        <field name="name">pos.config.view.form.inherit.pos</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id"
+               ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='product_and_category_block']"
+                   position="inside">
+                <setting string="Enable category wise discount"
+                         help="Set maximum discount limit on pos category">
+                    <field name="is_category_wise_discount_in_pos"/>
+                    <div invisible="is_category_wise_discount_in_pos == False">
+                        <div>
+                            <label string="Select Category"
+                                   for="pos_category_id"
+                                   class="col-lg-3 o_light_label"/>
+                            <field name="pos_category_id"/>
+                        </div>
+                        <div>
+                            <label string="Enter discount limit"
+                                   for="discount_limit"
+                                   class="col-lg-3 o_light_label"/>
+                            <field name="discount_limit"/>
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>
