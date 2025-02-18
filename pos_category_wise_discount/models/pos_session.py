@@ -18,4 +18,7 @@ class PosSession(models.Model):
         data = super()._load_pos_data_fields(config_id)
         # data += ['age']
         print(is_category_wise_discount_in_pos, pos_category_id, discount_limit)
+        print(self.env['pos.config'].search(
+            [('company_id', '=', self.env.company.id)], order='write_date desc',
+            limit=1).read())
         return data
