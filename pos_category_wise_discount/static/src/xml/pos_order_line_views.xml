@@ -6,7 +6,7 @@
         <xpath expr="//div[hasclass('d-flex flex-column w-100 gap-1')]"
                position="inside">
            <h5 t-esc="props.line.discount"/>
-            <t t-log="this"/>
+            <!--            <t t-log="this"/>-->
        </xpath>
     </t>
 </templates>
