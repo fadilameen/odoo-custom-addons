@@ -10,7 +10,7 @@
     ],
     'assets': {
         'point_of_sale._assets_pos': [
-            'pos_category_wise_discount/static/src/js/pos_order_line.js',
+            'pos_category_wise_discount/static/src/js/pos_store.js',
         ],
     },
 

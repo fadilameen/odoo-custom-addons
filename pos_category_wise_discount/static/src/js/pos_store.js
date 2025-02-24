@@ -33,4 +33,8 @@ patch(PosStore.prototype, {
     }
     return res;
   },
+  pay(){
+  console.log(this)
+        var res = super.pay();
+  }
 });
