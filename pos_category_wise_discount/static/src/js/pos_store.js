@@ -6,53 +6,36 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 
 patch(PosStore.prototype, {
-  setDiscountFromUI(line, val) {
-    var res = super.setDiscountFromUI(line, val);
-    if (this.models["pos.config"].getFirst().is_category_wise_discount_in_pos) {
-      var discount_limited_category =
-        this.models["pos.config"].getFirst().pos_category_id.name;
-      var product_categories = [];
-      line.product_id.pos_categ_ids.forEach((category) => {
-        product_categories.push(category.name);
-      });
-      if (product_categories.includes(discount_limited_category)) {
-        var discount_limit =
-          this.models["pos.config"].getFirst().discount_limit;
-        var current_discount = line.discount;
-        if (current_discount > discount_limit) {
-          this.dialog.add(AlertDialog, {
-            title: _t("Alert!"),
-            body: _t("Discount exceeded the limit."),
-          });
-        }
-      }
-    }
-    return res;
-  },
   pay() {
     if (this.models["pos.config"].getFirst().is_category_wise_discount_in_pos) {
       var discount_limited_category =
         this.models["pos.config"].getFirst().pos_category_id.name;
       var order_lines = this.get_order().get_orderlines();
-      var discount_exceeded = order_lines.some((line) => {
+      var current_total_amount = 0;
+      var actual_total_amount = 0;
+      order_lines.forEach((line) => {
         var categories = [];
         line.product_id.pos_categ_ids.forEach((category) => {
           categories.push(category.name);
         });
         if (categories.includes(discount_limited_category)) {
-          var discount_limit =
-            this.models["pos.config"].getFirst().discount_limit;
-          var current_discount = line.discount;
-          if (current_discount > discount_limit) {
-            this.dialog.add(AlertDialog, {
-              title: _t("Alert!"),
-              body: _t("Some of the product discount exceeded the limit."),
-            });
-            return true;
-          }
+          current_total_amount += line.price_subtotal;
+          actual_total_amount += line.price_unit * line.qty;
         }
       });
-      if (!discount_exceeded) super.pay();
+      var allowed_total =
+        actual_total_amount -
+        (actual_total_amount *
+          this.models["pos.config"].getFirst().discount_limit) /
+          100;
+      if (current_total_amount < allowed_total) {
+        this.dialog.add(AlertDialog, {
+          title: _t("Alert!"),
+          body: _t("Category discount exceeded the limit."),
+        });
+      } else {
+        super.pay();
+      }
     } else {
       super.pay();
     }
