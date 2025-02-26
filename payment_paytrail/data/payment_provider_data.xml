@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="payment.payment_provider_paytrail" model="payment.provider">
+        <field name="code">paytrail</field>
+    </record>
+</odoo>
