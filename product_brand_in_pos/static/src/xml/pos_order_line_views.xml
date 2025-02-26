@@ -2,12 +2,9 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.Orderline" t-inherit="point_of_sale.Orderline"
        t-inherit-mode="extension">
-
-        <xpath expr="//div[hasclass('d-flex flex-column w-100 gap-1')]"
+        <xpath expr="//div[hasclass('product-name d-inline-block flex-grow-1 fw-bolder pe-1 text-truncate')]"
                position="inside">
-           <h5 t-esc="props.line.discount"/>
-            <t t-log="this"/>
-            <t t-log="props.slots"/>
+           <h5 t-esc="props.line.brand"/>
        </xpath>
     </t>
 </templates>

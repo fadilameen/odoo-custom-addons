@@ -18,7 +18,8 @@ Product Brand in POS.
     'assets': {
         'point_of_sale._assets_pos': [
             'product_brand_in_pos/static/src/xml/pos_order_line_views.xml',
-            'product_brand_in_pos/static/src/js/pos_store.js',
+            'product_brand_in_pos/static/src/js/pos_order_line.js',
+            'product_brand_in_pos/static/src/js/order_line.js',
         ],
     },
     'installable': True,
