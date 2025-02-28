@@ -10,3 +10,5 @@ class PaymentProvider(models.Model):
         selection_add=[("paytrail", "Paytrail")],
         ondelete={"paytrail": "set default"}
     )
+    paytrail_merchant_id = fields.Char(string="Merchant Id")
+    paytrail_secret_key = fields.Char(string="Secret Key")

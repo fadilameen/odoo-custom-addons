@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="payment_provider_form_paytrail" model="ir.ui.view">
+        <field name="name">Paytrail Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position='inside'>
+                <group name="paytrail_credentials"
+                       invisible="code != 'paytrail'">
+                    <field name="paytrail_merchant_id"
+                           required="code == 'paytrail' and state != 'disabled'"/>
+                    <field name="paytrail_secret_key"
+                           required="code == 'paytrail' and state != 'disabled'"
+                           password="True"/>
+                    <widget name="documentation_link"
+                            path="https://www.paytrail.com/en/developers#guide"
+                            label="How to configure your paytrail account?"
+                            colspan="2"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

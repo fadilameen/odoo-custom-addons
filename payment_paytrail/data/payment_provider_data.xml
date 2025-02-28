@@ -5,5 +5,13 @@
         <field name="code">paytrail</field>
         <field name="image_128" type="base64"
                file="payment_paytrail/static/description/icon.png"/>
+        <field name="payment_method_ids"
+               eval="[Command.set([
+                         ref('payment.payment_method_card'),
+                         ref('payment.payment_method_bank_transfer'),
+                         ref('payment.payment_method_paypal'),
+                         ref('payment.payment_method_mobile_pay'),
+                         ref('payment.payment_method_paytrail'),
+                         ])]"/>
     </record>
 </odoo>
