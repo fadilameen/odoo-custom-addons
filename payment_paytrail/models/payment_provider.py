@@ -12,3 +12,4 @@ class PaymentProvider(models.Model):
     )
     paytrail_merchant_id = fields.Char(string="Merchant Id")
     paytrail_secret_key = fields.Char(string="Secret Key")
+    sdfghjkl;
