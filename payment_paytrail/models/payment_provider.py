@@ -17,7 +17,7 @@ class PaymentProvider(models.Model):
     def _prepare_paytrail_header(self):
         # print(str(uuid.uuid4()))
         # print(fields.datetime.now().isoformat())
-        print(self.read())
+        # print(self.read())
         headers = {
             "checkout-account": self.paytrail_merchant_id,
             "checkout-algorithm": "sha256",
