@@ -33,7 +33,10 @@ class PaymentProvider(models.Model):
         signature = self.calculate_hmac(secret, headers, body)
         headers["signature"] = signature
         print(headers)
-        response = requests.post(paytrail_url, data=body, headers=headers)
+        print(body)
+        # response = requests.post(paytrail_url, data=body, headers=headers)
+        response = requests.request(method="POST", url=paytrail_url, data=body, headers=headers,
+                                    timeout=60)  # (data=body) will only work if its (json=bod)y then there will be signature mismatch
         # Handle Response
         if response.status_code == 201:
             print("\nPayment Created Successfully!")
