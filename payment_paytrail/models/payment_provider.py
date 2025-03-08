@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 import hashlib
 import hmac
+import logging
+import pprint
 import uuid
-
 import requests
+from odoo import models, fields, _
+from odoo.exceptions import ValidationError
 
-from odoo import models, fields
+_logger = logging.getLogger(__name__)
 
 
 class PaymentProvider(models.Model):
@@ -32,17 +35,40 @@ class PaymentProvider(models.Model):
         })
         signature = self.calculate_hmac(secret, headers, body)
         headers["signature"] = signature
-        print(headers)
-        print(body)
         # response = requests.post(paytrail_url, data=body, headers=headers)
-        response = requests.request(method="POST", url=paytrail_url, data=body, headers=headers,
-                                    timeout=60)  # (data=body) will only work if its (json=bod)y then there will be signature mismatch
         # Handle Response
-        if response.status_code == 201:
-            print("\nPayment Created Successfully!")
-            print(response.json())  # Should return a payment URL
-        else:
-            print("\nError:", response.text)
+        # if response.status_code == 201:
+        #     print("\nPayment Created Successfully!")
+        #     print(response.json())  # Should return a payment URL
+        # else:
+        #     print("\nError:", response.text)
+        try:
+            response = requests.request(method="POST", url=paytrail_url, data=body, headers=headers,
+                                        timeout=60)  # (data=body) will only work if its (json=body) then there will be signature mismatch cos paytrail expect encoded data if we give body as data it will encode that automatically.if its json it wont encode it will just pass
+            if response.status_code == 201:
+                _logger.info("payment successfully created")
+                print("\nPayment Created Successfully!")
+                # print(response.json())
+            else:
+                _logger.error("\nError:", response.text)
+                print("\nError:", response.text)
+            try:
+                response.raise_for_status()
+            except requests.exceptions.HTTPError:
+                _logger.exception(
+                    "Invalid API request at %s with data:\n%s", paytrail_url, pprint.pformat(body)
+                )
+                raise ValidationError(
+                    "Paytrail: " + _(
+                        "The communication with the API failed. Paytrail gave us the following "
+                        "information: %s", response.json().get('detail', '')
+                    ))
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+            _logger.exception("Unable to reach endpoint at %s", paytrail_url)
+            raise ValidationError(
+                "Paytrail: " + _("Could not establish the connection to the API.")
+            )
+        return response.json()
 
     def calculate_hmac(self, secret, headers, body):
         data = []

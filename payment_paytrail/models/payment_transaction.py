@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
 import uuid
-
-from dateutil.utils import today
 from werkzeug import urls
 from odoo import models, fields
 
@@ -15,7 +13,17 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'paytrail':
             return res
         payload = self._paytrail_prepare_payment_request_payload()
-        self.provider_id._paytrail_make_request(payload)
+        payment_response = self.provider_id._paytrail_make_request(payload)
+        self.provider_reference = payment_response.get('reference')  # You already have this
+        transaction_id = payment_response.get('transactionId')  # Store this too
+        print(payment_response)
+        processing_values.update({
+            'api_url': payment_response['href'],
+            # 'method': 'GET',  # Add this - specify the HTTP method for redirect
+            'reference': self.provider_reference,
+            'transaction_id': transaction_id
+        })
+        return processing_values
 
     def _paytrail_prepare_payment_request_payload(self):
         base_url = self.get_base_url()
