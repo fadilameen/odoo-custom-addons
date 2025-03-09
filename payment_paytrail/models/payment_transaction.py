@@ -17,13 +17,22 @@ class PaymentTransaction(models.Model):
         self.provider_reference = payment_response.get('reference')  # You already have this
         transaction_id = payment_response.get('transactionId')  # Store this too
         print(payment_response)
+        # Create an HTML form for the redirect
+        redirect_form_html = f'''
+            <form method="GET" action="{payment_response['href']}">
+                <!-- You can add hidden fields here if needed -->
+            </form>
+        '''
+
         processing_values.update({
+            'redirect_form_html': redirect_form_html,
             'api_url': payment_response['href'],
-            # 'method': 'GET',  # Add this - specify the HTTP method for redirect
-            'reference': self.provider_reference,
-            'transaction_id': transaction_id
         })
         return processing_values
+
+    # def _get_specific_rendering_values(self, processing_values):
+    #     print('helloooo')
+    #     res = super()._get_specific_rendering_values(processing_values)
 
     def _paytrail_prepare_payment_request_payload(self):
         base_url = self.get_base_url()
