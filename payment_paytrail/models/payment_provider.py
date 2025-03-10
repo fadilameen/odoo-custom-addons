@@ -4,7 +4,9 @@ import hmac
 import logging
 import pprint
 import uuid
+
 import requests
+
 from odoo import models, fields, _
 from odoo.exceptions import ValidationError
 
@@ -22,7 +24,6 @@ class PaymentProvider(models.Model):
     paytrail_secret_key = fields.Char(string="Secret Key")
 
     def _paytrail_make_request(self, body):
-        # print(fields.Datetime.now().isoformat())
         paytrail_url = "https://services.paytrail.com/payments"
         secret = self.paytrail_secret_key
         headers = dict({
@@ -31,24 +32,15 @@ class PaymentProvider(models.Model):
             "checkout-method": "POST",
             "checkout-nonce": str(uuid.uuid4()),
             "checkout-timestamp": str(fields.Datetime.now().isoformat())
-            # "checkout-timestamp": "2018-07-06T10:01:31.904Z"
         })
         signature = self.calculate_hmac(secret, headers, body)
         headers["signature"] = signature
-        # response = requests.post(paytrail_url, data=body, headers=headers)
-        # Handle Response
-        # if response.status_code == 201:
-        #     print("\nPayment Created Successfully!")
-        #     print(response.json())  # Should return a payment URL
-        # else:
-        #     print("\nError:", response.text)
+
         try:
             response = requests.request(method="POST", url=paytrail_url, data=body, headers=headers,
                                         timeout=60)  # (data=body) will only work if its (json=body) then there will be signature mismatch cos paytrail expect encoded data if we give body as data it will encode that automatically.if its json it wont encode it will just pass
             if response.status_code == 201:
                 _logger.info("payment successfully created")
-                print("\nPayment Created Successfully!")
-                # print(response.json())
             else:
                 _logger.error("\nError:", response.text)
                 print("\nError:", response.text)
@@ -71,6 +63,7 @@ class PaymentProvider(models.Model):
         return response.json()
 
     def calculate_hmac(self, secret, headers, body):
+        """to calculate hmac"""
         data = []
         for key, value in headers.items():
             if key.startswith('checkout-'):
@@ -80,6 +73,7 @@ class PaymentProvider(models.Model):
         return hmac
 
     def compute_sha256_hash(self, message, secret):
+        """to hash the hmac"""
         # whitespaces that were created during json parsing process must be removed
         hash = hmac.new(secret.encode(), message.encode(), digestmod=hashlib.sha256)
         return hash.hexdigest()

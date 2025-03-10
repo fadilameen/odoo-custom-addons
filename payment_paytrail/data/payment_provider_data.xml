@@ -8,10 +8,11 @@
         <field name="payment_method_ids"
                eval="[Command.set([
                          ref('payment.payment_method_card'),
-                         ref('payment.payment_method_bank_transfer'),
-                         ref('payment.payment_method_paypal'),
-                         ref('payment.payment_method_mobile_pay'),
-                         ref('payment.payment_method_paytrail'),
+                         ref('payment_paytrail.payment_method_paytrail2'),
                          ])]"/>
+        <!--        <field name="available_currency_ids"-->
+        <!--               eval="[Command.set([ref('base.EUR')])]"/>-->
+        <!--        <field name="available_country_ids"-->
+        <!--               eval="[Command.set([ref('base.fi')])]"/>-->
     </record>
 </odoo>
