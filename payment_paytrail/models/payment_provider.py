@@ -24,6 +24,7 @@ class PaymentProvider(models.Model):
     paytrail_secret_key = fields.Char(string="Secret Key")
 
     def _paytrail_make_request(self, body):
+        """to make request into paytrail"""
         paytrail_url = "https://services.paytrail.com/payments"
         secret = self.paytrail_secret_key
         headers = dict({

@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
+    <record id="account_payment_method_paytrail_in" model="account.payment.method">
+        <field name="name">Paytrail</field>
+        <field name="code">paytrail</field>
+        <field name="payment_type">inbound</field>
+    </record>
     <record id="payment_method_paytrail2" model="payment.method">
         <field name="name">Paytrail</field>
         <field name="code">paytrail</field>
