@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <field name="default_code" position="after">
                 <field name="quality_level"
-                       widget="RangeSliderField" min="50" max="150"/>
+                       widget="RangeSliderField" min="50" max="150" step="3"/>
             </field>
         </field>
     </record>
